@@ -75,6 +75,9 @@ return {
 		local keymap = vim.keymap
 
 		keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Telescope find files" })
+		keymap.set("n", "<leader>fa", function()
+			builtin.find_files({ hidden = true, no_ignore = true })
+		end, { desc = "Telescope find files" })
 		keymap.set("n", "<leader>fd", builtin.git_files, { desc = "Git File Search" })
 		keymap.set("n", "<leader>fr", "<cmd>Telescope oldfiles<cr>", { desc = "Fuzzy find recent files" })
 		keymap.set("n", "<leader>fs", "<cmd>Telescope live_grep<cr>", { desc = "Find string in cwd" })
