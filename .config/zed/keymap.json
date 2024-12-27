@@ -1,0 +1,26 @@
+[
+  {
+    "context": "Editor && vim_mode == insert && !menu",
+    "bindings": {
+      // put key-bindings here if you want them to work in insert mode
+      // e.g.
+      "k j": "vim::NormalBefore" // remap jj in insert mode to escape.
+    }
+  },
+  {
+    "context": "Workspace",
+    "bindings": {
+      "ctrl-<": "pane::GoBack",
+      "ctrl->": "pane::GoForward"
+    }
+  },
+  {
+    "context": "Editor",
+    "bindings": {
+      "gd": "editor::GoToDefinition",
+      "ctrl-shift-j": "pane::ActivatePrevItem",
+      "ctrl-shift-k": "pane::ActivateNextItem",
+      "shift-w": "pane::CloseActiveItem"
+    }
+  }
+]
