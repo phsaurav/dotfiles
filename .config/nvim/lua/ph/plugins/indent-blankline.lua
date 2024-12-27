@@ -1,0 +1,41 @@
+return {
+	-- 	"lukas-reineke/indent-blankline.nvim",
+	-- 	event = { "BufReadPre", "BufNewFile" },
+	-- 	main = "ibl",
+	-- 	opts = {
+	-- 		indent = { char = "┊", highlight = false },
+	-- 	},
+	-- 	config = function()
+	-- 		local indent = require("ibl")
+	--
+	-- 		-- Define rainbow highlight groups
+	-- 		local highlight = {
+	-- 			"RainbowYellow",
+	-- 			"RainbowOrange",
+	-- 			"RainbowGreen",
+	-- 			"RainbowCyan",
+	-- 		}
+	--
+	-- 		local hooks = require("ibl.hooks")
+	--
+	-- 		-- Register highlight setup to reset highlights on colorscheme change
+	-- 		-- Define pastel colors for highlights
+	-- 		hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
+	-- 			vim.api.nvim_set_hl(0, "RainbowOrange", { fg = "#E8A773" }) -- Muted pastel orange
+	-- 			vim.api.nvim_set_hl(0, "RainbowYellow", { fg = "#E8D28A" }) -- Muted pastel yellow
+	-- 			vim.api.nvim_set_hl(0, "RainbowGreen", { fg = "#B2DB97" }) -- Muted pastel green
+	-- 			vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#6FAFBD" }) -- Muted pastel cyan
+	-- 		end)
+	--
+	-- 		-- Apply scope highlighting
+	-- 		indent.setup({
+	-- 			indent = {
+	-- 				char = "┊", -- Override indent character
+	-- 			},
+	-- 			scope = { highlight = highlight },
+	-- 		})
+	--
+	-- 		-- Register scope highlight hook
+	-- 		hooks.register(hooks.type.SCOPE_HIGHLIGHT, hooks.builtin.scope_highlight_from_extmark)
+	-- 	end,
+}

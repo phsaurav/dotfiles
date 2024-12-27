@@ -1,0 +1,72 @@
+# Base Settings
+config-file = /Users/phsaurav/.config/ghostty/config
+window-vsync = true
+shell-integration = zsh
+window-inherit-working-directory = true
+window-decoration = true
+macos-titlebar-style = hidden
+macos-option-as-alt = true
+window-new-tab-position = current
+window-theme = dark
+window-height = 1000
+window-width = 1400
+window-padding-x = 10
+window-padding-y = 10, 0
+confirm-close-surface = false
+adjust-cell-height = 12
+clipboard-read = allow
+clipboard-write = allow
+clipboard-paste-protection = false
+
+#Font Config
+font-size = 15
+font-thicken = true
+font-family = Operator Mono SSm Nerd Lig
+font-family-bold = Operator Mono SSm Nerd Lig
+font-family-italic = Operator Mono SSm Nerd Lig
+font-style-bold-italic = Operator Mono SSm Nerd Lig
+font-style = "Light"
+font-style-bold = "Light"
+font-style-italic = "Light Italic"
+font-style-bold-italic = "Book Italic"
+
+# Theme Config
+theme = Ayu Mirage
+background = #1f2430
+foreground = #CBCCC6
+selection-background = #707A8C
+selection-foreground = #CBCCC6
+cursor-color = #ffcc66
+cursor-style = bar
+palette = 0=#191e2a
+palette = 1=#ed8274
+palette = 2=#a6cc70
+palette = 3=#fad07b
+palette = 4=#707A8C
+palette = 5=#cfbafa
+palette = 6=#90e1c6
+palette = 7=#c7c7c7
+palette = 8=#686868
+palette = 9=#f28779
+palette = 10=#bae67e
+palette = 11=#ffd580
+palette = 12=#73d0ff
+palette = 13=#d4bfff
+palette = 14=#95e6cb
+palette = 15=#ffffff
+background-opacity = 0.9
+background-blur-radius = 100
+unfocused-split-opacity = .85
+
+# Keybinds
+keybind = ctrl+f>n=new_window
+keybind = ctrl+f>t=new_tab
+keybind = ctrl+f>q=close_surface
+keybind = ctrl+f>h=new_split:right
+keybind = ctrl+f>v=new_split:down
+keybind = ctrl+h=goto_split:left
+keybind = ctrl+j=goto_split:bottom
+keybind = ctrl+k=goto_split:top
+keybind = ctrl+l=goto_split:right
+keybind = ctrl+;=toggle_quick_terminal
+keybind = super+c=copy_to_clipboard

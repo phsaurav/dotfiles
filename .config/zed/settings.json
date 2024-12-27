@@ -1,0 +1,77 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run the `open default settings` command
+// from the command palette or from `Zed` application menu.
+{
+  "features": {
+    "copilot": false
+  },
+  "telemetry": {
+    "metrics": false
+  },
+  "vim_mode": true,
+  "base_keymap": "VSCode",
+  "theme": "Ayu Mirage",
+  "buffer_font_size": 16,
+  "buffer_font_family": "Operator Mono SSm Lig",
+  "buffer_line_height": "comfortable",
+  "autosave": {
+    "after_delay": {
+      "milliseconds": 3000
+    }
+  },
+  "soft_wrap": "editor_width",
+  "tab_size": 2,
+  "terminal": {
+    "font_size": 15
+  },
+  "experimental.theme_overrides": {
+    "background": "#171B24",
+    "panel.background": "#1F2430",
+    "toolbar.background": "#1F2430",
+    "editor.background": "#242936",
+    "border": "#171B24",
+    "border.focused": "#171B24",
+    "syntax": {
+      "keyword": {
+        "color": "#ffa7a7",
+        "font_style": "italic"
+      },
+      "comment": {
+        "color": "#818181",
+        "font_style": "italic"
+      }
+    }
+  },
+  "language_overrides": {
+    "JSON": {
+      "format_on_save": "off"
+    },
+    "TypeScript": {
+      "format_on_save": "off"
+    },
+    "JavaScript": {
+      "format_on_save": "off"
+    },
+    "Markdown": {
+      "show_whitespaces": "all"
+    },
+    "YAML": {
+      "show_whitespaces": "all"
+    },
+    "HTML": {
+      "show_whitespaces": "all"
+    },
+    "Python": {
+      "show_whitespaces": "all"
+    }
+  },
+  "toolbar": {
+    "breadcrumbs": false,
+    "quick_actions": false
+  }
+}
