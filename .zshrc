@@ -80,7 +80,7 @@ source $ZSH/oh-my-zsh.sh
 #
 # Aliases
 alias zconf="nv ~/.zshrc"
-alias cn="cd ~/.config/nvim/"
+alias dot="cd ~/dotfiles/"
 alias pb="cd ~/Documents/Play_Ground/Blank/"
 alias fp="fzf --preview=\"bat --color=always {}\""
 alias hf='fc -rl 1 | fzf | sed "s/^[ ]*[0-9]*[ ]*//" | awk "{printf \"%s\", \$0}"'

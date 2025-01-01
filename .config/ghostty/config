@@ -13,30 +13,29 @@ window-width = 1400
 window-padding-x = 10
 window-padding-y = 10, 0
 confirm-close-surface = false
-adjust-cell-height = 12
 clipboard-read = allow
 clipboard-write = allow
 clipboard-paste-protection = false
 
 #Font Config
-font-size = 15
-font-thicken = true
+font-size = 15.5
+adjust-cell-height = 13     
+# font-thicken = true
 font-family = Operator Mono SSm Nerd Lig
 font-family-bold = Operator Mono SSm Nerd Lig
 font-family-italic = Operator Mono SSm Nerd Lig
 font-style-bold-italic = Operator Mono SSm Nerd Lig
-font-style = "Light"
-font-style-bold = "Light"
-font-style-italic = "Light Italic"
+font-style = "Book"
+font-style-bold = "Book"
+font-style-italic = "Book Italic"
 font-style-bold-italic = "Book Italic"
 
 # Theme Config
+# Ayu Theme
 theme = Ayu Mirage
-background = #1f2430
-foreground = #CBCCC6
-selection-background = #707A8C
-selection-foreground = #CBCCC6
-cursor-color = #ffcc66
+# background = 161e25
+# foreground = ededed
+cursor-color = ffcc66
 cursor-style = bar
 palette = 0=#191e2a
 palette = 1=#ed8274
@@ -54,9 +53,9 @@ palette = 12=#73d0ff
 palette = 13=#d4bfff
 palette = 14=#95e6cb
 palette = 15=#ffffff
-background-opacity = 0.9
-background-blur-radius = 100
-unfocused-split-opacity = .85
+background-opacity = 0.85
+background-blur-radius = 200
+unfocused-split-opacity = .8
 
 # Keybinds
 keybind = ctrl+f>n=new_window
@@ -64,9 +63,10 @@ keybind = ctrl+f>t=new_tab
 keybind = ctrl+f>q=close_surface
 keybind = ctrl+f>h=new_split:right
 keybind = ctrl+f>v=new_split:down
-keybind = ctrl+h=goto_split:left
-keybind = ctrl+j=goto_split:bottom
-keybind = ctrl+k=goto_split:top
-keybind = ctrl+l=goto_split:right
+keybind = ctrl+shift+h=goto_split:left
+keybind = ctrl+shift+j=goto_split:bottom
+keybind = ctrl+shift+k=goto_split:top
+keybind = ctrl+shift+l=goto_split:right
 keybind = ctrl+;=toggle_quick_terminal
 keybind = super+c=copy_to_clipboard
+keybind = ctrl+shift+enter=toggle_split_zoom
