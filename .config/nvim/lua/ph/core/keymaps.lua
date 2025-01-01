@@ -58,37 +58,37 @@ keymap.set("n", "<leader>sv", ":split<CR>", opt)
 keymap.set("n", "<leader>sh", ":vsplit<CR>", opt)
 
 -- Map <Cmd> + A to select all in Neovim
-keymap.set("n", "<C-a>", "ggVG", { desc = "Select all" }) -- Normal mode
+keymap.set("n", "<C-a>", "ggVG", { desc = "Select all" })      -- Normal mode
 keymap.set("i", "<C-a>", "<Esc>ggVG", { desc = "Select all" }) -- Insert mode
 keymap.set("v", "va", "<Esc>ggVG", { desc = "Select all" })
 keymap.set("n", "<D-a>", "ggVG", { noremap = true, silent = true })
 
 keymap.set({ "n", "v" }, "<leader>pb", function()
-	vim.cmd("cd ~/Documents/Play_Ground/Blank/")
-	print("Directory changed to ~/Documents/Play_Ground/Blank/")
+  vim.cmd("cd ~/Documents/Play_Ground/Blank/")
+  print("Directory changed to ~/Documents/Play_Ground/Blank/")
 end, opt)
 keymap.set("n", "<C-s>", function()
-	local save_file = function(path)
-		local ok, err = pcall(vim.cmd.w, path)
+  local save_file = function(path)
+    local ok, err = pcall(vim.cmd.w, path)
 
-		if not ok then
-			-- clear `vim.ui.input` from cmdline to make space for an error
-			vim.cmd.redraw()
-			vim.notify(err, vim.log.levels.ERROR, {
-				title = "error while saving file",
-			})
-		end
-	end
+    if not ok then
+      -- clear `vim.ui.input` from cmdline to make space for an error
+      vim.cmd.redraw()
+      vim.notify(err, vim.log.levels.ERROR, {
+        title = "error while saving file",
+      })
+    end
+  end
 
-	if vim.api.nvim_buf_get_name(0) ~= "" then
-		save_file()
-	else
-		vim.ui.input({ prompt = "filename: " }, save_file)
-	end
+  if vim.api.nvim_buf_get_name(0) ~= "" then
+    save_file()
+  else
+    vim.ui.input({ prompt = "filename: " }, save_file)
+  end
 end)
 
 keymap.set("n", "<leader>yd", function()
-	local cwd = vim.fn.getcwd()
-	vim.fn.setreg("+", cwd)
-	print("Copied to clipboard: " .. cwd)
+  local cwd = vim.fn.getcwd()
+  vim.fn.setreg("+", cwd)
+  print("Copied to clipboard: " .. cwd)
 end, { desc = "Copy current directory path to clipboard" })
