@@ -155,14 +155,29 @@ export FZF_CTRL_R_OPTS="
   --header 'Press CTRL-Y to copy command into clipboard'"
 export FZF_COMPLETION_TRIGGER='**'
 source <(fzf --zsh)
+# --- setup fzf theme (Ayu Mirage) ---
+fg="#CBCCC6"          # Foreground color
+hl="#F28779"          # Highlight color (Ayu's orange)
+fg_plus="#CBCCC6"     # Selected foreground
+bg_plus="#1F2430"     # Selected background
+hl_plus="#F28779"     # Highlight color for selected item (Ayu's orange)
+info="#80D4FF"        # Info text (Ayu's blue)
+prompt="#FFCC66"      # Prompt color (Ayu's yellow)
+pointer="#F29E74"     # Pointer (e.g., > symbol)
+marker="#73D0FF"      # Marker color
+spinner="#73D0FF"     # Spinner color
+header="#5CCFE6"      # Header text color
 
+export FZF_DEFAULT_OPTS="--color=fg:${fg},hl:${hl},fg+:${fg},bg+:${bg_plus},hl+:${hl_plus},info:${info},prompt:${prompt},pointer:${pointer},marker:${marker},spinner:${spinner},header:${header}"
 
+# ---- Eza (better ls) -----
+alias ls="eza --icons=always"
+alias lsa="eza --color=always --all --long --icons=always --no-time --no-user --no-filesize"
+alias lst="eza --color=always --no-permissions --tree --level=2 --all --long --icons=always --no-time --no-user --no-filesize"
+export LS_COLORS="di=1;33:fi=0;37:ln=1;36:ex=1;35:.*=1;32"
+export BAT_THEME="gruvbox-dark"
 
-# export PATH=/usr/local/share/python:$PATH
-# # Configuration for virtualenv
-# export WORKON_HOME=$HOME/.virtualenvs
-# export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python3
-# export VIRTUALENVWRAPPER_VIRTUALENV=/usr/local/bin/virtualenvt
+show_file_or_dir_preview="if [ -d {} ]; then eza --tree --color=always {} | head -200; else bat -n --color=always --line-range :500 {}; fi"
 
 # CodeWhisperer post block. Keep at the bottom of this file.
 #[[ -f "${HOME}/Library/Application Support/codewhisperer/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/codewhisperer/shell/zshrc.post.zsh"

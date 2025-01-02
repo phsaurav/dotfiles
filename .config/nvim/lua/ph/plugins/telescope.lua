@@ -49,12 +49,19 @@ return {
       defaults = {
         layout_strategy = "vertical",
         layout_config = {
-          preview_height = 0.5,
           vertical = {
+            preview_height = 0.5, -- Specific to the vertical layout
             size = {
               width = "99%",
               height = "99%",
             },
+          },
+          horizontal = {
+            preview_width = 0.6, -- Example for horizontal layout
+          },
+          center = {
+            width = 0.8,  -- Specific to center layout
+            height = 0.4, -- Use height instead of preview_height
           },
         },
         path_display = { "truncate" },
@@ -82,6 +89,24 @@ return {
     keymap.set("n", "<leader>fr", "<cmd>Telescope oldfiles<cr>", { desc = "Fuzzy find recent files" })
     keymap.set("n", "<leader>fs", "<cmd>Telescope live_grep<cr>", { desc = "Find string in cwd" })
     keymap.set("n", "<leader>fc", "<cmd>Telescope grep_string<cr>", { desc = "Find string under cursor in cwd" })
+    keymap.set("n", "<leader>bb", function()
+      builtin.buffers(require('telescope.themes').get_dropdown({
+        previewer = false,            -- Disables the preview window
+        show_all_buffers = true,      -- Shows all open buffers
+        sort_mru = true,              -- Sorts buffers by Most Recently Used
+        ignore_current_buffer = true, -- Hides the current buffer from the list
+        mappings = {
+          i = {
+            ["<C-d>"] = function(prompt_bufnr)
+              local current_picker = action_state.get_current_picker(prompt_bufnr)
+              local selection = action_state.get_selected_entry()
+              actions.close(prompt_bufnr)                                -- Close the picker
+              vim.api.nvim_buf_delete(selection.bufnr, { force = true }) -- Delete the selected buffer
+            end,
+          },                                                             -- Use the delete_buffer action
+        },
+      }))
+    end, { noremap = true, silent = true, desc = "Open Telescope buffer picker" })
     keymap.set("v", "<leader>fv", function()
       local visual_selection = function()
         local save_previous = vim.fn.getreg("a")

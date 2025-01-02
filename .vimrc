@@ -30,9 +30,12 @@ nnoremap <C-v> "+gP    " Paste from clipboard with Ctrl+V
 nnoremap <leader>d :nohl<CR>
 
 " Delete without yanking
-nnoremap d "_d
-nnoremap D "_D
-nnoremap dd "_dd
+nnoremap c "_c
+nnoremap C "_C
+nnoremap cc "_cc
+vnoremap c "_c
+vnoremap C "_C
+vnoremap cc "_cc
 
 " Search for empty lines
 nnoremap <leader>n /^$/<CR>:nohl<CR>
