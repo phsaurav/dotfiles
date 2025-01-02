@@ -2,7 +2,7 @@ local opt = vim.opt
 
 opt.nu = true
 opt.relativenumber = true
-opt.clipboard:append("unnamedplus")
+opt.clipboard = "unnamedplus"
 opt.mouse = "a"
 
 opt.splitright = true
@@ -26,7 +26,7 @@ opt.backup = false
 -- opt.hlsearch = false
 opt.incsearch = true
 opt.ignorecase = true -- Ignore case when searching
-opt.smartcase = true -- Use smartcase logic
+opt.smartcase = true  -- Use smartcase logic
 
 opt.termguicolors = true
 
@@ -40,19 +40,19 @@ opt.colorcolumn = "100"
 opt.backspace = "indent,eol,start"
 
 vim.api.nvim_create_autocmd("TextYankPost", {
-	desc = "Highlight when yanking (copying) text",
-	group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
-	callback = function()
-		vim.highlight.on_yank()
-	end,
+  desc = "Highlight when yanking (copying) text",
+  group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
+  callback = function()
+    vim.highlight.on_yank()
+  end,
 })
 
 vim.diagnostic.config({
-	signs = true,
-	underline = {
-		severity = {
-			min = vim.diagnostic.severity.ERROR,
-		},
-	},
-	severity_sort = true,
+  signs = true,
+  underline = {
+    severity = {
+      min = vim.diagnostic.severity.ERROR,
+    },
+  },
+  severity_sort = true,
 })

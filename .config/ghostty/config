@@ -16,6 +16,7 @@ confirm-close-surface = false
 clipboard-read = allow
 clipboard-write = allow
 clipboard-paste-protection = false
+copy-on-select = true
 
 #Font Config
 font-size = 15.5
@@ -33,7 +34,7 @@ font-style-bold-italic = "Book Italic"
 # Theme Config
 # Ayu Theme
 theme = Ayu Mirage
-# background = 161e25
+background = 262A33
 # foreground = ededed
 cursor-color = ffcc66
 cursor-style = bar
@@ -55,7 +56,7 @@ palette = 14=#95e6cb
 palette = 15=#ffffff
 background-opacity = 0.85
 background-blur-radius = 200
-unfocused-split-opacity = .8
+unfocused-split-opacity = .84
 
 # Keybinds
 keybind = ctrl+f>n=new_window
@@ -70,3 +71,4 @@ keybind = ctrl+shift+l=goto_split:right
 keybind = ctrl+;=toggle_quick_terminal
 keybind = super+c=copy_to_clipboard
 keybind = ctrl+shift+enter=toggle_split_zoom
+keybind = super+c=unbind
