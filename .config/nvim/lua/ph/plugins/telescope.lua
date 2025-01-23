@@ -10,7 +10,7 @@ return {
     local telescope = require("telescope")
     local actions = require("telescope.actions")
     local builtin = require("telescope.builtin")
-    local transform_mod = require("telescope.actions.mt").transform_mod
+    -- local transform_mod = require("telescope.actions.mt").transform_mod
     -- local trouble = require("trouble")
     -- local trouble_telescope = require("trouble.sources.telescope")
     local action_state = require("telescope.actions.state")
@@ -48,11 +48,17 @@ return {
     telescope.setup({
       defaults = {
         layout_strategy = "vertical",
+        file_ignore_patterns = {
+          "node_modules",
+          ".git/",
+          "dist/",
+          "build/",
+        },
         layout_config = {
           vertical = {
             preview_height = 0.5, -- Specific to the vertical layout
             size = {
-              width = "99%",
+              width = "80%",
               height = "99%",
             },
           },
@@ -86,10 +92,17 @@ return {
       builtin.find_files({ hidden = true, no_ignore = true })
     end, { desc = "Telescope find files" })
     keymap.set("n", "<leader>fd", builtin.git_files, { desc = "Git File Search" })
-    keymap.set("n", "<leader>fr", "<cmd>Telescope oldfiles<cr>", { desc = "Fuzzy find recent files" })
-    keymap.set("n", "<leader>fs", "<cmd>Telescope live_grep<cr>", { desc = "Find string in cwd" })
+    -- keymap.set("n", "<leader>fr", "<cmd>Telescope oldfiles<cr>", { desc = "Fuzzy find recent files" })
+    keymap.set("n", "<leader>fss", "<cmd>Telescope live_grep<cr>", { desc = "Find string in cwd" })
+    keymap.set("n", "<leader>fsa", function()
+      builtin.live_grep({
+        additional_args = function()
+          return { "--hidden", "--no-ignore" }
+        end
+      })
+    end)
     keymap.set("n", "<leader>fc", "<cmd>Telescope grep_string<cr>", { desc = "Find string under cursor in cwd" })
-    keymap.set("n", "<leader>bb", function()
+    keymap.set("n", "<leader>bl", function()
       builtin.buffers(require('telescope.themes').get_dropdown({
         previewer = false,            -- Disables the preview window
         show_all_buffers = true,      -- Shows all open buffers
@@ -107,7 +120,7 @@ return {
         },
       }))
     end, { noremap = true, silent = true, desc = "Open Telescope buffer picker" })
-    keymap.set("v", "<leader>fv", function()
+    keymap.set("v", "<leader>fc", function()
       local visual_selection = function()
         local save_previous = vim.fn.getreg("a")
         vim.cmd([[normal! "ay]])
