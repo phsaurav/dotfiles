@@ -23,6 +23,12 @@ keymap.set("n", "gh", "<C-w>h", opt)
 keymap.set("n", "gj", "<C-w><C-j>", { desc = "Move focus to the lower window" })
 keymap.set("n", "gk", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 
+-- Resize splits incrementally
+keymap.set("n", "<C-M-l>", ":vertical resize -2<CR>", { silent = true, desc = "Decrease width" })
+keymap.set("n", "<C-M-h>", ":vertical resize +2<CR>", { silent = true, desc = "Increase width" })
+keymap.set("n", "<C-M-j>", ":resize -2<CR>", { silent = true, desc = "Decrease height" })
+keymap.set("n", "<C-M-k>", ":resize +2<CR>", { silent = true, desc = "Increase height" })
+
 -- Replace
 keymap.set("n", "gsw", [[:%s/\<<C-r><C-w>\>//g<Left><Left>]], { noremap = true, silent = false })
 keymap.set("v", "gsw", [[y:%s/<C-r>"//g<Left><Left>]], { noremap = true, silent = false })
@@ -31,17 +37,25 @@ keymap.set("v", "<C-c>", '"+y', opt)
 keymap.set("v", "<Tab>", ">gv")
 keymap.set("v", "<S-Tab>", "<gv")
 
--- Wrapper
-keymap.set("x", "<leader>b", "xi()<Esc>P")
-keymap.set("x", "<leader>{", "c{}<Esc>P")
-keymap.set("x", "<leader>[", "c[]<Esc>P")
-keymap.set("x", "<leader>'", "c''<Esc>P")
-keymap.set("x", '<leader>"', 'c""<Esc>P')
+-- Wrapper (Updated to work with autopair plugin)
+keymap.set("x", "<leader>b", "<Esc>`>a)<Esc>`<i(<Esc>", { noremap = true, desc = "Wrap with parentheses" })
+keymap.set("x", "<leader>{", "<Esc>`>a}<Esc>`<i{<Esc>", { noremap = true, desc = "Wrap with curly braces" })
+keymap.set("x", "<leader>[", "<Esc>`>a]<Esc>`<i[<Esc>", { noremap = true, desc = "Wrap with square brackets" })
+keymap.set("x", "<leader>'", "<Esc>`>a'<Esc>`<i'<Esc>", { noremap = true, desc = "Wrap with single quotes" })
+keymap.set("x", '<leader>"', '<Esc>`>a"<Esc>`<i"<Esc>', { noremap = true, desc = "Wrap with double quotes" })
 
 keymap.set({ "n", "v" }, "g;", "%")
 
 keymap.set({ "n", "v" }, "<leader>wd", "<Cmd>lua toggle_virtual_text()<CR>", opt)
 keymap.set({ "n", "v" }, "<leader>w", "<Cmd>lua Save_file()<CR>", opt)
+vim.keymap.set({ "n", "v" }, "<leader>s", function()
+  if vim.api.nvim_buf_get_name(0) ~= "" then
+    vim.cmd("wa")
+  else
+    vim.ui.input({ prompt = "filename: " }, save_file)
+  end
+end)
+
 keymap.set("n", "<leader>fx", "<Cmd>lua quickfix()<CR>", opt)
 keymap.set("n", "<leader>dl", vim.diagnostic.setloclist, opt)
 keymap.set("n", "<leader>dn", vim.diagnostic.goto_next, opt)
@@ -52,6 +66,7 @@ keymap.set("n", "<leader>cn", "<Cmd>cnext<CR>", opt)
 keymap.set("n", "<leader>cp", "<Cmd>cprev<CR>", opt)
 
 keymap.set("n", "<leader>q", ":q<CR>")
+keymap.set("n", "<leader>Q", ":q!<CR>")
 -- Open the selected file in a horizontal split
 keymap.set("n", "<leader>sv", ":split<CR>", opt)
 
@@ -61,6 +76,16 @@ keymap.set("n", "<leader>sh", ":vsplit<CR>", opt)
 -- Buffer Manipulation
 keymap.set("n", "<leader>bn", ":bnext<CR>", { noremap = true, silent = true, desc = "Next buffer" })
 keymap.set("n", "<leader>bp", ":bprevious<CR>", { noremap = true, silent = true, desc = "Previous buffer" })
+
+keymap.set("n", "<leader>tc", ":TabnineChat<CR>", { noremap = true, silent = true, desc = "Start Tabnine Chat" })
+
+-- Nvim Terminal
+keymap.set("n", "<leader>tt", ":terminal<CR>", { noremap = true, silent = true, desc = "Open terminal in new buffer" })
+keymap.set("n", "<leader>th", ":vsplit | terminal<CR>",
+  { noremap = true, silent = true, desc = "Open terminal in vertical split" })
+keymap.set("n", "<leader>tv", ":split | terminal<CR>",
+  { noremap = true, silent = true, desc = "Open terminal in horizontal split" })
+keymap.set("t", "<Esc>", "<C-\\><C-n>", { noremap = true, silent = true, desc = "Exit terminal mode" })
 
 -- Close all buffers except the current one
 keymap.set("n", "<leader>bo", function()
@@ -97,6 +122,9 @@ keymap.set("n", "<leader>ba", "<cmd>b#<cr>", {
   desc = "Switch to alternate buffer"
 })
 
+-- Record macro
+keymap.set("n", "<leader>m", "q", { noremap = true, silent = true, desc = "Start/stop macro recording" })
+
 -- Map <Cmd> + A to select all in Neovim
 keymap.set("n", "<C-a>", "ggVG", { desc = "Select all" })      -- Normal mode
 keymap.set("i", "<C-a>", "<Esc>ggVG", { desc = "Select all" }) -- Insert mode
@@ -109,18 +137,6 @@ keymap.set({ "n", "v" }, "<leader>pb", function()
   print("Directory changed to ~/Documents/Play_Ground/Blank/")
 end, opt)
 keymap.set("n", "<C-s>", function()
-  local save_file = function(path)
-    local ok, err = pcall(vim.cmd.w, path)
-
-    if not ok then
-      -- clear `vim.ui.input` from cmdline to make space for an error
-      vim.cmd.redraw()
-      vim.notify(err, vim.log.levels.ERROR, {
-        title = "error while saving file",
-      })
-    end
-  end
-
   if vim.api.nvim_buf_get_name(0) ~= "" then
     save_file()
   else
@@ -133,3 +149,21 @@ keymap.set("n", "<leader>yd", function()
   vim.fn.setreg("+", cwd)
   print("Copied to clipboard: " .. cwd)
 end, { desc = "Copy current directory path to clipboard" })
+
+keymap.set("n", "<leader>yf", function()
+  local relative_path = vim.fn.expand("%")
+  vim.fn.setreg("+", relative_path)
+  print("Copied to clipboard: " .. relative_path)
+end, { desc = "Copy relative file path to clipboard" })
+
+save_file = function(path)
+  local ok, err = pcall(vim.cmd.w, path)
+
+  if not ok then
+    -- clear `vim.ui.input` from cmdline to make space for an error
+    vim.cmd.redraw()
+    vim.notify(err, vim.log.levels.ERROR, {
+      title = "error while saving file",
+    })
+  end
+end

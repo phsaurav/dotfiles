@@ -1,11 +1,12 @@
 return {
   "neovim/nvim-lspconfig",
-  -- event = { "BufReadPre", "BufNewFile" },
-  ft = { "lua", "python", "go", "javascript", "typescript", "terraform", "dockerfile" },
+  event = {
+    "BufReadPost *.{lua,py,go,js,jsx,ts,tsx,tf,tfvars,dockerfile,json,sh,bash,zsh}",
+    "BufNewFile *.{lua,py,go,js,jsx,ts,tsx,tf,tfvars,dockerfile,json,sh,bash,zsh}"
+  },
+  ft = { "lua", "python", "go", "javascript", "typescript", "terraform", "dockerfile", "json", "sh" },
   dependencies = {
     "saghen/blink.cmp",
-    { "antosha417/nvim-lsp-file-operations", config = true },
-    { "folke/neodev.nvim",                   opts = {} },
   },
   config = function()
     -- Set sign column to always display
@@ -32,6 +33,9 @@ return {
           workspace = { library = vim.api.nvim_get_runtime_file("", true) },
         },
       },
+      jsonls = {},
+      bashls = {}
+
     }
 
     -- Common on_attach function with descriptions for keymaps
@@ -144,7 +148,7 @@ return {
           },
           languageServer = {
             enable = true,
-            args = { "serve" },
+            args = { "server" },
           },
           telemetry = {
             enable = false,

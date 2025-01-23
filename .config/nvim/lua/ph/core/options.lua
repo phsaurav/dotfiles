@@ -8,12 +8,17 @@ opt.mouse = "a"
 opt.splitright = true
 opt.splitbelow = true
 
+opt.foldenable = false
+opt.foldlevelstart = 99
+opt.foldlevel = 20
+opt.foldmethod = "expr"
+opt.foldexpr = "nvim_treesitter#foldexpr()"
+
 opt.tabstop = 2
 opt.softtabstop = 2
 opt.shiftwidth = 2
 opt.expandtab = true
 opt.autoindent = true
-
 opt.smartindent = true
 
 opt.wrap = true

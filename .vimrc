@@ -26,8 +26,14 @@ set clipboard+=unnamedplus
 vnoremap <C-c> "+y     " Copy to clipboard with Ctrl+C
 nnoremap <C-v> "+gP    " Paste from clipboard with Ctrl+V
 
+" Resize splits incrementally
+nnoremap <C-M-l> :vertical resize -2<CR>
+nnoremap <C-M-h> :vertical resize +2<CR>
+nnoremap <C-M-j> :resize -2<CR>
+nnoremap <C-M-k> :resize +2<CR>
+
 " Clear search highlight
-nnoremap <leader>d :nohl<CR>
+nnoremap <leader>dd :nohl<CR>
 
 " Delete without yanking
 nnoremap c "_c
@@ -38,19 +44,14 @@ vnoremap C "_C
 vnoremap cc "_cc
 
 " Search for empty lines
-nnoremap <leader>n /^$/<CR>:nohl<CR>
+" nnoremap <leader>dd /^$/<CR>:nohl<CR>
 
 " Close active window
 nnoremap <leader>c :q<CR>
 
 " Split window
-nnoremap <leader>s :vsplit<CR>
-
-" Go to start of line
-nnoremap gh _
-
-" Go to end of line
-nnoremap gl $
+nnoremap <leader>sh :vsplit<CR>
+nnoremap <leader>sv :split<CR>
 
 " Move to matching parenthesis
 nnoremap g; %

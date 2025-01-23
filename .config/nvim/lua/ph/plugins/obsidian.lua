@@ -1,7 +1,7 @@
 return {
   {
     "MeanderingProgrammer/render-markdown.nvim",
-    ft = "markdown",
+    ft = { "markdown", "copilot-chat" },
     dependencies = {
       "nvim-treesitter/nvim-treesitter",
       "nvim-tree/nvim-web-devicons",
@@ -31,6 +31,20 @@ return {
     end,
   },
   {
+    "iamcco/markdown-preview.nvim",
+    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+    build = "cd app && yarn install",
+    init = function()
+      vim.g.mkdp_filetypes = { "markdown" }
+      vim.g.mkdp_markdown_image_path =
+      "/Users/phsaurav/Library/CloudStorage/GoogleDrive-phsaurav29@gmail.com/My Drive/[01] My_Folder/[04] Education/Obsidian-VaultHubs/Attachments"
+    end,
+    ft = { "markdown" },
+    keys = {
+      { "<leader>mp", "<cmd>MarkdownPreview<CR>", desc = "Markdown Preview" },
+    },
+  },
+  {
     "epwalsh/obsidian.nvim",
     version = "*", -- recommended, use latest release instead of latest commit
     lazy = true,
@@ -53,6 +67,9 @@ return {
         subdir = "Templates",
         date_format = "%d-%m-%Y",
         time_format = "%H:%M",
+      },
+      attachments = {
+        img_folder = "Hubs/Attachments"
       },
       mappings = {
         ["gf"] = {
@@ -130,7 +147,7 @@ return {
       vim.keymap.set("n", "<leader>of", function()
         require("telescope.builtin").find_files({
           search_dirs = {
-            vim.fn.expand("~/obsidian-vault/Notes"),
+            vim.fn.expand("~/obsidian-vault/Notes/"),
             vim.fn.expand("~/obsidian-vault/Inbox/"),
             vim.fn.expand("~/obsidian-vault/Zettelkasten/"),
           },
@@ -141,7 +158,7 @@ return {
       vim.keymap.set("n", "<leader>os", function()
         require("telescope.builtin").live_grep({
           search_dirs = {
-            vim.fn.expand("~/obsidian-vault/Notes"),
+            vim.fn.expand("~/obsidian-vault/Notes/"),
             vim.fn.expand("~/obsidian-vault/Inbox/"),
             vim.fn.expand("~/obsidian-vault/Zettelkasten/"),
           },

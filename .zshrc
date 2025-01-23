@@ -1,87 +1,41 @@
-# CodeWhisperer pre block. Keep at the top of this file.
-[[ -f "${HOME}/Library/Application Support/codewhisperer/shell/zshrc.pre.zsh" ]] && builtin source "${HOME}/Library/Application Support/codewhisperer/shell/zshrc.pre.zsh"
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
+# Path to oh-my-zsh installation.
+export ZSH="$HOME/.oh-my-zsh"
 
-# Path to your oh-my-zsh installation.
-export ZSH="/Users/phsaurav/.oh-my-zsh"
-export PATH="$PATH":"$HOME/.pub-cache/bin"
+# Path configuration.
+export PATH="$PATH:$HOME/.pub-cache/bin"
 export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
-# Set name of the theme to load --- if set to "random", it will
-# load a random theme each time oh-my-zsh is loaded, in which case,
-# to know which specific one was loaded, run: echo $RANDOM_THEME
-# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="powerlevel10k/powerlevel10k"
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/Utils/flutter/bin:$PATH"
+PATH="$HOME/.amplify/bin:$PATH"
+PATH="$HOME/.console-ninja/.bin:$PATH"
 
+# Ruby environment initialization.
+#eval "$(rbenv init -)"
 
-# Uncomment the following line to use case-sensitive completion.
-# CASE_SENSITIVE="true"
+# ZSH Theme configuration.
+#ZSH_THEME="powerlevel10k/powerlevel10k"
 
-# Uncomment the following line to use hyphen-insensitive completion.
-# Case-sensitive completion must be off. _ and - will be interchangeable.
-# HYPHEN_INSENSITIVE="true"
-
-
-
-# ZSH_CUSTOM=/path/to/new-custom-folder
-
-# Which plugins would you like to load?
-# Standard plugins can be found in $ZSH/plugins/
-# Custom plugins may be added to $ZSH_CUSTOM/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
+# Plugin configuration.
 plugins=(
-	git
-	zsh-autosuggestions
-	zsh-syntax-highlighting
-	vi-mode
-	direnv
+  zsh-autosuggestions
+  zsh-syntax-highlighting
+  vi-mode
 )
 
-# function zvm_config() {
-#   ZVM_LINE_INIT_MODE=$ZVM_MODE_INSERT
-#   ZVM_VI_INSERT_ESCAPE_BINDKEY=kj
-# }
+# Load oh-my-zsh.
+#source $ZSH/oh-my-zsh.sh
 
-# function zvm_after_init() {
-#   zvm_bindkey viins '^j' autosuggest-accept
-#   zvm_bindkey viins '^k' autosuggest-execute
-#   zvm_bindkey viins '^l'
-# }
+# User configuration.
+# Uncomment to use case-sensitive completion.
+# CASE_SENSITIVE="true"
 
-# source /Users/phsaurav/\$\{ZSH_CUSTOM:-~/.oh-my-zsh/custom\}/plugins/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+# Uncomment to use hyphen-insensitive completion.
+# HYPHEN_INSENSITIVE="true"
 
-source $ZSH/oh-my-zsh.sh
-# source $(brew --prefix nvm)/nvm.sh
-
-# User configuration
-
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
-
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
-
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-#
-# Aliases
+# Aliases.
 alias zconf="nv ~/.zshrc"
 alias dot="cd ~/dotfiles/"
-alias pb="cd ~/Documents/Play_Ground/Blank/"
+alias cdb="cd ~/Documents/Play_Ground/Blank/"
 alias fp="fzf --preview=\"bat --color=always {}\""
 alias hf='fc -rl 1 | fzf | sed "s/^[ ]*[0-9]*[ ]*//" | awk "{printf \"%s\", \$0}"'
 alias fn='nvim $(fzf --preview="bat --color=always {}")'
@@ -91,7 +45,6 @@ alias tf='terraform'
 alias v='vim'
 alias nv='nvim'
 alias ms='/opt/homebrew/opt/mongodb-community/bin/mongod --config /opt/homebrew/etc/mongod.conf'
-alias clear='clear && printf "\e[3J"'
 alias cl='clear'
 alias vea='source venv/bin/activate'
 alias ved='deactivate'
@@ -101,50 +54,46 @@ alias fsr='uvicorn main:app --reload'
 alias g:='git commit -m '
 alias ga:='git add . && git commit -am '
 alias lg='lazygit'
-alias killp= 'kill $(lsof -ti:3000,3001,8080,5000,8000,3306)'
+alias killp='kill $(lsof -ti:3000,3001,8080,5000,8000,3306)'
 alias ld='lazydocker'
 alias ta='tmux attach'
 
-# Obsidian
+# Obsidian aliases.
 alias oo='cd ~/obsidian-vault/'
 alias or='nvim ~/obsidian-vault/inbox/*.md'
 alias ou='cd $HOME/notion-obsidian-sync-zazencodes && node batchUpload.js --lastmod-days-window 5'
 
-
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+# Prompt configuration.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# Autosuggestions bindkeys.
 bindkey '^s' autosuggest-toggle
 bindkey '^k' autosuggest-execute
 bindkey '^j' autosuggest-accept
 bindkey -s '^;' '^[f'
 bindkey -M viins 'kj' vi-cmd-mode
-eval "$(pyenv init -)"
 
-export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
-export PUPPETEER_EXECUTABLE_PATH=`which chromium`
-export PYENV_ROOT="/Users/phsaurav/.pyenv"
-export PATH="$PATH:/Users/phsaurav/Utils/flutter/bin"
-export PATH="/Users/phsaurav/.local/bin:$PATH"
-export DIRENV_LOG_FORMAT=""
-# export VI_MODE_SET_CURSOR=true
-# bindkey -v
-# Change cursor with vim mode
-function zle-keymap-select () {
-case $KEYMAP in
-vicmd) echo -ne '\e[1 q';; # block
-viins|main) echo -ne '\e[3 q';; # underscore
-esac
+# pyenv initialization.
+eval "$(pyenv init -)"
+# Change cursor with vim mode.
+function zle-keymap-select() {
+  case $KEYMAP in
+    vicmd) echo -ne '\e[1 q';; # block
+    viins|main) echo -ne '\e[3 q';; # underscore
+  esac
 }
 zle -N zle-keymap-select
+
 zle-line-init() {
-echo -ne "\e[3 q"
+  echo -ne "\e[3 q"
 }
 zle -N zle-line-init
-echo -ne '\e[3 q' # Use beam shape cursor on startup.
-preexec() { echo -ne '\e[3 q' ;} # Use beam shape cursor for each new prompt.
 
+preexec() {
+  echo -ne "\e[3 q"
+}
 bindkey '^R' fzf-history-widget
+
 export FZF_CTRL_R_OPTS="
   --preview 'echo {2..} | bat --color=always -pl sh'
   --preview-window up:3:hidden:wrap
@@ -154,23 +103,27 @@ export FZF_CTRL_R_OPTS="
   --color header:italic
   --header 'Press CTRL-Y to copy command into clipboard'"
 export FZF_COMPLETION_TRIGGER='**'
-source <(fzf --zsh)
-# --- setup fzf theme (Ayu Mirage) ---
-fg="#CBCCC6"          # Foreground color
-hl="#F28779"          # Highlight color (Ayu's orange)
-fg_plus="#CBCCC6"     # Selected foreground
-bg_plus="#1F2430"     # Selected background
-hl_plus="#F28779"     # Highlight color for selected item (Ayu's orange)
-info="#80D4FF"        # Info text (Ayu's blue)
-prompt="#FFCC66"      # Prompt color (Ayu's yellow)
-pointer="#F29E74"     # Pointer (e.g., > symbol)
-marker="#73D0FF"      # Marker color
-spinner="#73D0FF"     # Spinner color
-header="#5CCFE6"      # Header text color
+
+# FZF theme (Ayu Mirage).
+fg="#CBCCC6"
+hl="#F28779"
+fg_plus="#CBCCC6"
+bg_plus="#1F2430"
+hl_plus="#F28779"
+info="#80D4FF"
+prompt="#FFCC66"
+pointer="#F29E74"
+marker="#73D0FF"
+spinner="#73D0FF"
+header="#5CCFE6"
 
 export FZF_DEFAULT_OPTS="--color=fg:${fg},hl:${hl},fg+:${fg},bg+:${bg_plus},hl+:${hl_plus},info:${info},prompt:${prompt},pointer:${pointer},marker:${marker},spinner:${spinner},header:${header}"
+# pyenv root.
+export PYENV_ROOT="$HOME/.pyenv"
+# Direnv log format.
+export DIRENV_LOG_FORMAT=""
 
-# ---- Eza (better ls) -----
+# Eza (better ls) configuration.
 alias ls="eza --icons=always"
 alias lsa="eza --color=always --all --long --icons=always --no-time --no-user --no-filesize"
 alias lst="eza --color=always --no-permissions --tree --level=2 --all --long --icons=always --no-time --no-user --no-filesize"
@@ -179,15 +132,42 @@ export BAT_THEME="gruvbox-dark"
 
 show_file_or_dir_preview="if [ -d {} ]; then eza --tree --color=always {} | head -200; else bat -n --color=always --line-range :500 {}; fi"
 
-# CodeWhisperer post block. Keep at the bottom of this file.
-#[[ -f "${HOME}/Library/Application Support/codewhisperer/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/codewhisperer/shell/zshrc.post.zsh"
+# Dart CLI completion.
+[[ -f "$HOME/.dart-cli-completion/zsh-config.zsh" ]] && source "$HOME/.dart-cli-completion/zsh-config.zsh" || true
 
-# Added by Amplify CLI binary installer
-export PATH="$HOME/.amplify/bin:$PATH"
+# Better directory stack navigation
+setopt AUTO_PUSHD
+setopt PUSHD_IGNORE_DUPS
+setopt PUSHD_SILENT
 
-PATH=~/.console-ninja/.bin:$PATH
+# History improvements
+HISTSIZE=10000
+SAVEHIST=10000
+setopt SHARE_HISTORY
 
-## [Completion]
-## Completion scripts setup. Remove the following line to uninstall
-[[ -f /Users/phsaurav/.dart-cli-completion/zsh-config.zsh ]] && . /Users/phsaurav/.dart-cli-completion/zsh-config.zsh || true
-## [/Completion]
+# Initialize a flag for first run
+typeset -g FIRST_PROMPT=1
+
+precmd() {
+  # Check if this is the first prompt
+  if ((FIRST_PROMPT)); then
+    FIRST_PROMPT=0
+    return
+  fi
+
+  # Get the last command from history
+  local last_cmd=$(fc -ln -1)
+  # Trim whitespace
+  last_cmd="${last_cmd## }"
+  
+  # Don't add newline if the last command was clear
+  if [[ "$last_cmd" != "cl" ]]; then
+    echo
+  fi
+}
+
+source <(fzf --zsh)
+
+eval "$(starship init zsh)"
+
+

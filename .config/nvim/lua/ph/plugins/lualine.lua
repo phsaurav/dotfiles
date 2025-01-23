@@ -4,7 +4,10 @@ return {
   config = function()
     local function get_relative_file_path()
       -- Find the project root using .git or fallback to cwd
-      local root = vim.fn.finddir(".git/..", vim.fn.getcwd() .. ";")
+      local root = vim.fn.finddir(".git/..", vim.fn.getcwd() .. ";")  -- Try .git first
+      if root == "" then
+        root = vim.fn.finddir(".obsidian/..", vim.fn.getcwd() .. ";") -- Try .obsidian next
+      end
       if root == "" then
         root = vim.fn.getcwd() -- Fallback if no root is found
       end
@@ -21,12 +24,26 @@ return {
       end
 
       -- Strip the root from the file path to make it relative
+      local relative_path
       if file_path:sub(1, #root) == root then
-        return file_path:sub(#root + 1)
+        relative_path = file_path:sub(#root + 1)
+      else
+        -- If the file is outside the root, return the full path
+        return file_path
       end
 
-      -- If the file is outside the root, return the full path
-      return file_path
+      -- Split the relative path into components
+      local path_components = {}
+      for component in string.gmatch(relative_path, "[^/]+") do
+        table.insert(path_components, component)
+      end
+
+      -- Keep only up to 3 levels deep
+      if #path_components > 4 then
+        return "../" .. table.concat(path_components, "/", #path_components - 3, #path_components)
+      else
+        return relative_path
+      end
     end
 
     local custom_ayu = require("lualine.themes.ayu")
@@ -58,21 +75,24 @@ return {
       sections = {
         lualine_a = { "mode" },
         lualine_b = { "branch", "diff", "diagnostics" },
-        lualine_c = { get_relative_file_path },
-        lualine_x = { {
-          "buffers",
-          buffers_color = {
-            active = { bg = nil, fg = "#FFD173" },
-            inactive = { bg = nil },
-          },
-          max_length = vim.o.columns / 3,
-          fmt = function(str)
-            if #str > 24 then
-              return str:sub(1, 20) .. ".."
-            end
-            return str
-          end,
-        }, "fileformat", "filetype", "tabnine" },
+        lualine_c = {
+          {
+            "buffers",
+            hide_filename_extension = false,
+            buffers_color = {
+              active = { bg = nil, fg = "#FFD173" },
+              inactive = { bg = nil },
+            },
+            max_length = vim.o.columns / 3,
+            symbols = {
+              alternate_file = "*", -- Symbol for alternate file
+            },
+          }
+        },
+        lualine_x = { get_relative_file_path, "fileformat",
+          "filetype",
+          -- "tabnine"
+        },
         lualine_y = { "progress" },
         lualine_z = { "location" },
       },
