@@ -28,10 +28,11 @@ return {
       -- list of servers for mason to install
       ensure_installed = {
         "gopls",
-        "pyright",
         "bashls",
         "jsonls",
+        "pyright",
       },
+      automatic_installation = true
     })
 
     -- mason_tool_installer.setup({

@@ -34,10 +34,10 @@ return {
     conform.setup({
       formatters_by_ft = {
         go = { "gofmt" },
+        python = { "black", "isort" } -- Add isort for import sorting
       },
       format_on_save = {
         lsp_fallback = true,
-        async = false,
         timeout_ms = 1000,
       },
     })

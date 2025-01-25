@@ -18,8 +18,8 @@ return {
 
     -- List of servers to set up
     local servers = {
-      pyright = {}, -- Python LSP (no additional settings)
-      gopls = {     -- Go LSP with custom settings
+      gopls = { -- Go LSP with custom settings
+        filetypes = { "go", "gomod", "gowork", "gotmpl" },
         gopls = {
           completeUnimported = true,
           analyses = { unusedparams = true },
@@ -27,15 +27,24 @@ return {
           usePlaceholders = true,
         },
       },
-      lua_ls = {                                 -- Lua LSP specific settings
+      lua_ls = { -- Lua LSP specific settings
+        filetypes = { "lua" },
         Lua = {
           diagnostics = { globals = { "vim" } }, -- Recognize `vim` as a global
           workspace = { library = vim.api.nvim_get_runtime_file("", true) },
         },
       },
-      jsonls = {},
-      bashls = {}
-
+      jsonls = {
+        filetypes = { "json", "jsonc" }
+      },
+      dockerls = {
+      },
+      bashls = {
+        filetypes = { "sh", "bash" }
+      },
+      pyright = {
+        filetypes = { "python" },
+      },
     }
 
     -- Common on_attach function with descriptions for keymaps

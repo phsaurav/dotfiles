@@ -68,9 +68,9 @@ return {
     },
 
     keys = {
-      { "<leader>ch", ":CopilotChatToggle<CR> ",  desc = "CopilotChat - Ask question" },
+      { "<leader>ch", ":CopilotChatToggle<CR> ", desc = "CopilotChat - Ask question" },
       {
-        "<leader>cc",
+        "<leader>cp",
         function()
           local chat = require("CopilotChat")
           chat.toggle({
@@ -86,9 +86,9 @@ return {
         end,
         desc = "CopilotChat - Ask question"
       },
-      { "<leader>ce", ":CopilotChatExplain<CR>",  desc = "CopilotChat - Explain code" },
-      { "<leader>cf", ":CopilotChatFix<CR>",      desc = "CopilotChat - Explain code" },
-      { "<leader>co", ":CopilotChatOptimize<CR>", desc = "CopilotChat - Explain code" },
+      { "<leader>ce", ":CopilotChatExplain<CR>", desc = "CopilotChat - Explain code" },
+      { "<leader>cf", ":CopilotChatFix<CR>",     desc = "CopilotChat - Explain code" },
+      -- { "<leader>co", ":CopilotChatOptimize<CR>", desc = "CopilotChat - Explain code" },
     },
   },
 }

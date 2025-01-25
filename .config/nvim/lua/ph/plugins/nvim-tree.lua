@@ -23,8 +23,8 @@ return {
       local keymap = vim.keymap.set
       keymap("n", "h", api.node.navigate.parent_close, opts("Close Parent"))
       keymap("n", "l", api.node.open.no_window_picker, opts("Open File No Window Picker"))
-      keymap("n", "<C-h>", api.node.open.horizontal, opts("Open: Horizontal Split"))
-      keymap("n", "<C-v>", api.node.open.vertical, opts("Open: Vertical Split"))
+      keymap("n", "<C-v>", api.node.open.horizontal, opts("Open: Horizontal Split"))
+      keymap("n", "<C-h>", api.node.open.vertical, opts("Open: Vertical Split"))
     end
 
     -- Nvim-tree setup
