@@ -1,5 +1,5 @@
 # Base Settings
-config-file = /Users/phsaurav/.config/ghostty/config
+# config-file = /Users/phsaurav/.config/ghostty/config
 window-vsync = true
 shell-integration = zsh
 window-inherit-working-directory = true
@@ -15,7 +15,6 @@ window-padding-y = 10, 0
 confirm-close-surface = false
 clipboard-read = allow
 clipboard-write = allow
-clipboard-paste-protection = false
 copy-on-select = true
 
 #Font Config
@@ -71,4 +70,4 @@ keybind = ctrl+shift+l=goto_split:right
 keybind = ctrl+;=toggle_quick_terminal
 keybind = super+c=copy_to_clipboard
 keybind = ctrl+shift+enter=toggle_split_zoom
-keybind = super+c=unbind
+# keybind = super+c=unbind

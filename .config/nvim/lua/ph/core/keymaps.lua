@@ -15,6 +15,9 @@ keymap.set("n", "cc", '"_cc')
 keymap.set("n", "go", "<C-o>")
 keymap.set("n", "gi", "<C-i>")
 
+keymap.set("v", ">", ">gv", { desc = "indent right" })
+keymap.set("v", "<", "<gv", { desc = "indent left" })
+
 -- Movement
 keymap.set("n", "L", "16kzz", opt)
 keymap.set("n", "H", "16jzz", opt)
@@ -57,7 +60,55 @@ vim.keymap.set({ "n", "v" }, "<leader>s", function()
 end)
 
 keymap.set("n", "<leader>fx", "<Cmd>lua quickfix()<CR>", opt)
-keymap.set("n", "<leader>dl", vim.diagnostic.setloclist, opt)
+keymap.set("n", "<leader>dt", function()
+  local diagnostics_active = vim.diagnostic.is_disabled()
+  if diagnostics_active then
+    vim.diagnostic.enable()
+    vim.notify("Diagnostics enabled", vim.log.levels.INFO)
+  else
+    vim.diagnostic.disable()
+    vim.notify("Diagnostics disabled", vim.log.levels.INFO)
+  end
+end, { desc = "Toggle diagnostics" })
+keymap.set("n", "<leader>dl", function()
+  local qf_exists = false
+  for _, win in pairs(vim.fn.getwininfo()) do
+    if win["quickfix"] == 1 then
+      qf_exists = true
+    end
+  end
+  if qf_exists then
+    vim.cmd("lclose")
+  else
+    vim.diagnostic.setloclist()
+  end
+end, { desc = "Toggle diagnostic list" })
+vim.keymap.set("n", "<leader>dk", function()
+  local bufnr = vim.api.nvim_get_current_buf()      -- Get the current buffer
+  local cursor_pos = vim.api.nvim_win_get_cursor(0) -- Get the current cursor position
+  local line = cursor_pos[1] - 1                    -- Convert to 0-based index
+  local col = cursor_pos[2]
+
+  -- Get diagnostics for the current line
+  local diagnostics = vim.diagnostic.get(bufnr, { lnum = line })
+
+  -- Open the floating diagnostic window
+  vim.diagnostic.open_float(nil, { focus = false })
+
+  -- Find and copy the diagnostic message under the cursor
+  for _, diag in ipairs(diagnostics) do
+    if col >= diag.col and col < diag.end_col then
+      vim.fn.setreg('"', diag.message) -- Copy the message to the unnamed register
+      vim.fn.setreg('+', diag.message) -- Copy the message to the system clipboard
+      print("Copied diagnostic message: " .. diag.message)
+      return
+    end
+  end
+
+  print("No diagnostic message under cursor.")
+end, { desc = "Open float and copy diagnostic message under cursor" })
+
+
 keymap.set("n", "<leader>dn", vim.diagnostic.goto_next, opt)
 keymap.set("n", "<leader>dp", vim.diagnostic.goto_prev, opt)
 keymap.set("n", "<leader>cc", "<Cmd>cclose<CR>", opt)

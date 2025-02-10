@@ -138,18 +138,21 @@ return {
       setup_server(server, settings)
     end
 
+    local util = require("lspconfig.util")
+
     lspconfig.terraformls.setup({
       capabilities = capabilities,
       on_attach = function(client, bufnr)
-        -- Disable semantic tokens
+        -- Disable semantic tokens if not needed
         client.server_capabilities.semanticTokensProvider = nil
 
-        -- Call the common on_attach function
+        -- Call your common on_attach function
         on_attach(client, bufnr)
       end,
       flags = {
-        debounce_text_changes = 300, -- Debounce rapid text changes
+        debounce_text_changes = 200,
       },
+      root_dir = util.root_pattern(".terraform", ".git"),
       settings = {
         terraform = {
           experimentalFeatures = {
