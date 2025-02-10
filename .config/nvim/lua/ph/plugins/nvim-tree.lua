@@ -46,7 +46,7 @@ return {
         },
       },
       filters = { custom = { ".DS_Store" } },
-      git = { ignore = true },
+      git = { ignore = false },
       on_attach = my_on_attach,
     })
   end,
