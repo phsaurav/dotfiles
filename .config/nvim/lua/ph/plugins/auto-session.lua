@@ -25,10 +25,25 @@ return {
     },
     post_restore_cmds = {
       function()
-        -- Restore nvim-tree after a session is restored
         local nvim_tree_api = require("nvim-tree.api")
+        -- Change root and reload in background
         nvim_tree_api.tree.change_root(vim.fn.getcwd())
         nvim_tree_api.tree.reload()
+
+        -- Check if nvim-tree was visible in any window
+        local was_tree_open = false
+        for _, win in pairs(vim.api.nvim_list_wins()) do
+          local buf = vim.api.nvim_win_get_buf(win)
+          if vim.bo[buf].filetype == "NvimTree" then
+            was_tree_open = true
+            break
+          end
+        end
+
+        -- Only reopen if it was previously open
+        if was_tree_open then
+          nvim_tree_api.tree.open()
+        end
       end,
     },
   },
