@@ -35,7 +35,7 @@ return {
         relativenumber = false,
       },
       renderer = {
-        indent_markers = { enable = true },
+        indent_markers = { enable = false },
         icons = {
           glyphs = {
             folder = {
