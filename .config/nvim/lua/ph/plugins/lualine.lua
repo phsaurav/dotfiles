@@ -47,6 +47,12 @@ return {
     end
 
     local custom_ayu = require("lualine.themes.ayu")
+    local codecompanion_spinner = require("ph.utils.spinner")
+
+    local function codecompanion_current_model_name()
+      local chat = require("codecompanion").buf_get_chat(vim.api.nvim_get_current_buf())
+      return chat and chat.settings.model
+    end
 
     custom_ayu.normal.c.bg = nil
     custom_ayu.normal.b.bg = "#1C1C1C"
@@ -93,8 +99,8 @@ return {
           "filetype",
           -- "tabnine"
         },
-        lualine_y = { "progress" },
-        lualine_z = { "location" },
+        lualine_y = { codecompanion_current_model_name, "progress" },
+        lualine_z = { codecompanion_spinner, "location" },
       },
       inactive_sections = {
         lualine_a = {},
