@@ -33,7 +33,7 @@ return {
     },
     opts = {
       agent = 'copilot',
-      model = 'claude-3.5-sonnet',
+      model = 'claude-3.7-sonnet',
       show_help = true,  -- Shows help message as virtual lines when waiting for user input
       show_folds = true, -- Shows folds for sections in chat
       chat_autocomplete = false,

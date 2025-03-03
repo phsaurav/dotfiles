@@ -30,7 +30,6 @@ return {
                 contains_code = true,
               },
             },
-
           },
         },
       },
@@ -54,7 +53,7 @@ return {
       window = {
         layout = "vertical", -- float|vertical|horizontal|buffer
         position = nil,      -- left|right|top|bottom (nil will default depending on vim.opt.plitright|vim.opt.splitbelow)
-        width = 0.45,
+        width = 0.40,
         relative = "editor",
         opts = {
           breakindent = true,

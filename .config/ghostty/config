@@ -1,5 +1,10 @@
-# Base Settings
-# config-file = /Users/phsaurav/.config/ghostty/config
+#╔═══════════════════════╗
+#║ Ghostty configuration ║
+#╚═══════════════════════╝
+
+#┌───────────────────────┐
+#│🛞 General settings    │
+#└───────────────────────┘
 window-vsync = true
 shell-integration = zsh
 window-inherit-working-directory = true
@@ -9,15 +14,17 @@ macos-option-as-alt = true
 window-new-tab-position = current
 window-theme = dark
 window-height = 1000
-window-width = 1400
+window-width = 1600
 window-padding-x = 10
 window-padding-y = 10, 0
-confirm-close-surface = false
 clipboard-read = allow
 clipboard-write = allow
 copy-on-select = true
+confirm-close-surface = always
 
-#Font Config
+#┌───────────────────────┐
+#│📗 Font settings       │
+#└───────────────────────┘
 font-size = 15.5
 adjust-cell-height = 13     
 # font-thicken = true
@@ -30,8 +37,9 @@ font-style-bold = "Book"
 font-style-italic = "Book Italic"
 font-style-bold-italic = "Book Italic"
 
-# Theme Config
-# Ayu Theme
+#┌───────────────────────┐
+#│🎨 Theme settings      │
+#└───────────────────────┘
 theme = Ayu Mirage
 background = 262A33
 # foreground = ededed
@@ -57,7 +65,9 @@ background-opacity = 0.85
 background-blur-radius = 200
 unfocused-split-opacity = .84
 
-# Keybinds
+#┌───────────────────────┐
+#│🎹 Keybindings         │
+#└───────────────────────┘
 keybind = ctrl+f>n=new_window
 keybind = ctrl+f>t=new_tab
 keybind = ctrl+f>q=close_surface
@@ -70,4 +80,5 @@ keybind = ctrl+shift+l=goto_split:right
 keybind = ctrl+;=toggle_quick_terminal
 keybind = super+c=copy_to_clipboard
 keybind = ctrl+shift+enter=toggle_split_zoom
+keybind = ctrl+shift+t=toggle_tab_overview
 # keybind = super+c=unbind

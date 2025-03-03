@@ -5,6 +5,7 @@ local opt = { noremap = true, silent = true }
 
 keymap.set("i", "kj", "<Esc>")
 keymap.set("n", "<leader>eo", vim.cmd.Ex) -- Open Explorer
+vim.keymap.set('i', '<A-Backspace>', '<C-w>', { noremap = true, silent = true })
 
 keymap.set("n", "<leader>dd", ":nohl<CR>")
 keymap.set({ "n", "v" }, "c", '"_c', { noremap = true })
@@ -143,14 +144,37 @@ keymap.set("n", "<leader>bo", function()
   local current_buffer = vim.api.nvim_get_current_buf()
   local all_buffers = vim.api.nvim_list_bufs()
 
+  -- Count buffers that would be closed
+  local buffers_to_close = 0
   for _, buf in ipairs(all_buffers) do
     if buf ~= current_buffer and vim.api.nvim_buf_is_valid(buf) and vim.api.nvim_buf_get_option(buf, 'modified') == false then
-      vim.api.nvim_buf_delete(buf, { force = false })
+      buffers_to_close = buffers_to_close + 1
     end
   end
 
-  vim.cmd("redraw")
-  print("Closed all buffers except the current one")
+  if buffers_to_close == 0 then
+    print("No other buffers to close")
+    return
+  end
+
+  -- Ask for confirmation
+  vim.ui.input({
+    prompt = "Close " .. buffers_to_close .. " buffer(s)? (y/n): ",
+  }, function(input)
+    if input and (input == "y" or input == "Y") then
+      local closed = 0
+      for _, buf in ipairs(all_buffers) do
+        if buf ~= current_buffer and vim.api.nvim_buf_is_valid(buf) and vim.api.nvim_buf_get_option(buf, 'modified') == false then
+          vim.api.nvim_buf_delete(buf, { force = false })
+          closed = closed + 1
+        end
+      end
+      vim.cmd("redraw")
+      print("Closed " .. closed .. " buffer(s)")
+    else
+      print("Operation cancelled")
+    end
+  end)
 end, { noremap = true, silent = true, desc = "Close all buffers except current" })
 
 -- Delete buffer

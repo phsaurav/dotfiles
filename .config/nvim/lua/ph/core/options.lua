@@ -44,6 +44,8 @@ opt.colorcolumn = "100"
 
 opt.backspace = "indent,eol,start"
 
+vim.opt.dictionary:append("/usr/share/dict/words")
+
 vim.api.nvim_create_autocmd("TextYankPost", {
   desc = "Highlight when yanking (copying) text",
   group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
