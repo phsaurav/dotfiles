@@ -1,8 +1,7 @@
 return {
   {
     "saghen/blink.cmp",
-    dependencies = { "saghen/blink.compat" },
-
+    dependencies = { "saghen/blink.compat" }, -- Move blink-cmp-dictionary out of here
     version = "*",
 
     opts = {
@@ -46,7 +45,8 @@ return {
           "obsidian",
           "obsidian_new",
           "obsidian_tags",
-          "markdown"
+          "markdown",
+          "dictionary", -- Keep this, but it’ll only work when loaded
         },
         providers = {
           obsidian = {
@@ -63,15 +63,31 @@ return {
           },
           markdown = {
             name = "render-markdown",
-            module = 'render-markdown.integ.blink',
+            module = "render-markdown.integ.blink",
             enabled = function()
               if vim.bo.filetype == "markdown" then
-                return true  -- Return true for markdown files
+                return true
               else
-                return false -- Return false for non-markdown files
+                return false
               end
-            end
-          }
+            end,
+          },
+          dictionary = {
+            module = "blink-cmp-dictionary",
+            name = "Dict",
+            min_keyword_length = 3,
+            enabled = function()
+              if vim.bo.filetype == "markdown" then
+                return true  -- Enable dictionary only for markdown files
+              else
+                return false -- Disable for all other filetypes
+              end
+            end,
+            opts = {
+              dictionary_files = { vim.fn.expand("/Users/phsaurav/Documents/Software/words.txt") },
+              max_items = 5,
+            },
+          },
         },
       },
 
@@ -83,5 +99,11 @@ return {
         },
       },
     },
-  }
+  },
+  {
+    "Kaiser-Yang/blink-cmp-dictionary",
+    ft = "markdown",                       -- Load only for Markdown filetype
+    dependencies = { "saghen/blink.cmp" }, -- Ensure blink.cmp is loaded first
+  },
 }
+
