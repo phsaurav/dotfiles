@@ -3,42 +3,35 @@ return {
   dependencies = { "nvim-tree/nvim-web-devicons" },
   config = function()
     local function get_relative_file_path()
-      -- Find the project root using .git or fallback to cwd
-      local root = vim.fn.finddir(".git/..", vim.fn.getcwd() .. ";")  -- Try .git first
+      local root = vim.fn.finddir(".git/..", vim.fn.getcwd() .. ";")
       if root == "" then
-        root = vim.fn.finddir(".obsidian/..", vim.fn.getcwd() .. ";") -- Try .obsidian next
+        root = vim.fn.finddir(".obsidian/..", vim.fn.getcwd() .. ";")
       end
       if root == "" then
-        root = vim.fn.getcwd() -- Fallback if no root is found
+        root = vim.fn.getcwd()
       end
 
-      -- Get the absolute path of the current file
       local file_path = vim.fn.expand("%:p")
       if file_path == "" then
-        return "" -- No file is currently open
+        return ""
       end
 
-      -- Ensure the root ends with a slash for consistency
       if not root:match("/$") then
         root = root .. "/"
       end
 
-      -- Strip the root from the file path to make it relative
       local relative_path
       if file_path:sub(1, #root) == root then
         relative_path = file_path:sub(#root + 1)
       else
-        -- If the file is outside the root, return the full path
         return file_path
       end
 
-      -- Split the relative path into components
       local path_components = {}
       for component in string.gmatch(relative_path, "[^/]+") do
         table.insert(path_components, component)
       end
 
-      -- Keep only up to 3 levels deep
       if #path_components > 4 then
         return "../" .. table.concat(path_components, "/", #path_components - 3, #path_components)
       else
@@ -47,11 +40,20 @@ return {
     end
 
     local custom_ayu = require("lualine.themes.ayu")
+
     local codecompanion_spinner = require("ph.utils.spinner")
 
     local function codecompanion_current_model_name()
-      local chat = require("codecompanion").buf_get_chat(vim.api.nvim_get_current_buf())
-      return chat and chat.settings.model
+      if vim.g.codecompanion_in_use then
+        local status, codecompanion = pcall(require, "codecompanion")
+        if status and codecompanion and type(codecompanion.buf_get_chat) == "function" then
+          local chat = codecompanion.buf_get_chat(vim.api.nvim_get_current_buf())
+          if chat and chat.settings then
+            return chat.settings.model or ""
+          end
+        end
+      end
+      return ""
     end
 
     custom_ayu.normal.c.bg = nil
@@ -91,15 +93,13 @@ return {
             },
             max_length = vim.o.columns / 3,
             symbols = {
-              alternate_file = "*", -- Symbol for alternate file
+              alternate_file = "*",
             },
-          }
+          },
         },
-        lualine_x = { get_relative_file_path, "fileformat",
-          "filetype",
-          -- "tabnine"
-        },
-        lualine_y = { codecompanion_current_model_name, "progress" },
+        lualine_x = { get_relative_file_path, "fileformat", "filetype" },
+        lualine_y = {
+          codecompanion_current_model_name, "progress" },
         lualine_z = { codecompanion_spinner, "location" },
       },
       inactive_sections = {

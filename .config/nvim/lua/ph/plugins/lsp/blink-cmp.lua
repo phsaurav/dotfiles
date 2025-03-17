@@ -14,6 +14,14 @@ return {
         ["<Down>"] = { "select_next", "fallback" },
         ["<Up>"] = { "select_prev", "fallback" },
       },
+      cmdline = {
+        enabled = true,
+        completion = {
+          menu = {
+            auto_show = true,
+          }
+        }
+      },
       completion = {
         ghost_text = {
           enabled = false,
@@ -106,4 +114,3 @@ return {
     dependencies = { "saghen/blink.cmp" }, -- Ensure blink.cmp is loaded first
   },
 }
-

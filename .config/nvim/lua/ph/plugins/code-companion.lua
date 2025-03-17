@@ -1,10 +1,10 @@
 return {
   "olimorris/codecompanion.nvim",
-  event = "VeryLazy",
   cmd = {
     "CodeCompanion",
     "CodeCompanionChat",
     "CodeCompanionActions",
+    "CodeCompanionChat Toggle"
   },
   config = function()
     require("codecompanion").setup({
@@ -17,7 +17,7 @@ return {
               callback = "strategies.chat.slash_commands.file",
               description = "Select a file using Telescope",
               opts = {
-                provider = "telescope", -- Other options include 'default', 'mini_pick', 'fzf_lua', snacks
+                provider = "telescope",
                 contains_code = true,
               },
             },
@@ -26,7 +26,7 @@ return {
               callback = "strategies.chat.slash_commands.buffer",
               description = "Select a file using Telescope",
               opts = {
-                provider = "telescope", -- Other options include 'default', 'mini_pick', 'fzf_lua', snacks
+                provider = "telescope",
                 contains_code = true,
               },
             },
@@ -43,7 +43,7 @@ return {
             },
             schema = {
               model = {
-                default = "google/gemini-2.0-flash-001",
+                default = "openai/o3-mini",
               },
             }
           })
@@ -92,8 +92,10 @@ return {
       },
     })
 
-    vim.keymap.set("n", "<leader>ch", "<cmd>CodeCompanionChat Toggle<cr>", { desc = "Open CodeCompanion chat" })
+    -- vim.keymap.set("n", "<leader>ch", "<cmd>CodeCompanionChat Toggle<cr>", { desc = "Open CodeCompanion chat" })
+
     vim.keymap.set({ "n", "v" }, "<C-a>", "<cmd>CodeCompanionActions<cr>", { noremap = true, silent = true })
+    vim.g.codecompanion_in_use = true
   end,
   dependencies = {
     "nvim-lua/plenary.nvim",

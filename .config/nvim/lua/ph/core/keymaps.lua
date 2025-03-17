@@ -242,3 +242,15 @@ save_file = function(path)
     })
   end
 end
+
+vim.keymap.set("n", "<leader>ch", function()
+  local has_cc, cc = pcall(require, "codecompanion")
+  if not has_cc then
+    vim.cmd("CodeCompanion")
+    vim.defer_fn(function()
+      vim.cmd("CodeCompanionChat Toggle")
+    end, 100)
+  else
+    vim.cmd("CodeCompanionChat Toggle")
+  end
+end, { desc = "Open CodeCompanion chat" })
