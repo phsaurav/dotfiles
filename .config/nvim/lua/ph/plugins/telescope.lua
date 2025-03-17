@@ -87,14 +87,14 @@ return {
     telescope.load_extension("fzf")
     local keymap = vim.keymap
 
-    keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Telescope find files" })
-    keymap.set("n", "<leader>fa", function()
+    keymap.set("n", "<leader>fd", builtin.find_files, { desc = "Telescope find files" })
+    keymap.set("n", "<leader>ff", function()
       builtin.find_files({ hidden = true, no_ignore = true })
     end, { desc = "Telescope find files" })
-    keymap.set("n", "<leader>fd", builtin.git_files, { desc = "Git File Search" })
+    keymap.set("n", "<leader>fg", builtin.git_files, { desc = "Git File Search" })
     -- keymap.set("n", "<leader>fr", "<cmd>Telescope oldfiles<cr>", { desc = "Fuzzy find recent files" })
-    keymap.set("n", "<leader>fss", "<cmd>Telescope live_grep<cr>", { desc = "Find string in cwd" })
-    keymap.set("n", "<leader>fsa", function()
+    -- keymap.set("n", "<leader>fss", "<cmd>Telescope live_grep<cr>", { desc = "Find string in cwd" })
+    keymap.set("n", "<leader>fs", function()
       builtin.live_grep({
         additional_args = function()
           return { "--hidden", "--no-ignore" }
