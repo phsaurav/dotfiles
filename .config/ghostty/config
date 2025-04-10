@@ -68,11 +68,11 @@ unfocused-split-opacity = .84
 #┌───────────────────────┐
 #│🎹 Keybindings         │
 #└───────────────────────┘
-keybind = ctrl+f>n=new_window
-keybind = ctrl+f>t=new_tab
-keybind = ctrl+f>q=close_surface
-keybind = ctrl+f>h=new_split:right
-keybind = ctrl+f>v=new_split:down
+keybind = ctrl+g>n=new_window
+keybind = ctrl+g>t=new_tab
+keybind = ctrl+g>q=close_surface
+keybind = ctrl+g>h=new_split:right
+keybind = ctrl+g>v=new_split:down
 keybind = ctrl+shift+h=goto_split:left
 keybind = ctrl+shift+j=goto_split:bottom
 keybind = ctrl+shift+k=goto_split:top

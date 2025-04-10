@@ -14,7 +14,8 @@ return {
 
     -- Import LSPConfig and CMP capabilities
     local lspconfig = require("lspconfig")
-    local capabilities = require("blink.cmp").get_lsp_capabilities()
+    local original_capabilities = vim.lsp.protocol.make_client_capabilities()
+    local capabilities = require("blink.cmp").get_lsp_capabilities(original_capabilities)
 
     -- List of servers to set up
     local servers = {
@@ -51,18 +52,6 @@ return {
     local function on_attach(client, bufnr)
       local opts = { buffer = bufnr, silent = true }
 
-      -- vim.keymap.set(
-      -- 	"n",
-      -- 	"<leader>ca",
-      -- 	vim.lsp.buf.code_action,
-      -- 	vim.tbl_extend("keep", opts, { desc = "LSP: Code Action" })
-      -- )
-      vim.keymap.set(
-        "n",
-        "<leader>rn",
-        vim.lsp.buf.rename,
-        vim.tbl_extend("keep", opts, { desc = "LSP: Rename Symbol" })
-      )
       vim.keymap.set(
         "n",
         "K",
@@ -81,27 +70,29 @@ return {
         vim.lsp.buf.declaration,
         vim.tbl_extend("keep", opts, { desc = "LSP: Go to Declaration" })
       )
+      -- Default-gri
+      -- vim.keymap.set(
+      --   "n",
+      --   "gI",
+      --   vim.lsp.buf.implementation,
+      --   vim.tbl_extend("keep", opts, { desc = "LSP: Go to Implementation" })
+      -- )
+      -- Defautl-grr
+      -- vim.keymap.set(
+      --   "n",
+      --   "gr",
+      --   vim.lsp.buf.references,
+      --   vim.tbl_extend("keep", opts, { desc = "LSP: Show References" })
+      -- )
       vim.keymap.set(
         "n",
-        "gI",
-        vim.lsp.buf.implementation,
-        vim.tbl_extend("keep", opts, { desc = "LSP: Go to Implementation" })
-      )
-      vim.keymap.set(
-        "n",
-        "gr",
-        vim.lsp.buf.references,
-        vim.tbl_extend("keep", opts, { desc = "LSP: Show References" })
-      )
-      vim.keymap.set(
-        "n",
-        "gs",
+        "ga",
         vim.lsp.buf.signature_help,
         vim.tbl_extend("keep", opts, { desc = "LSP: Show Signature Help" })
       )
       vim.keymap.set(
         "n",
-        "<leader>gt",
+        "gt",
         function()
           require("telescope.builtin").lsp_type_definitions()
         end,
@@ -112,7 +103,7 @@ return {
       end, vim.tbl_extend("keep", opts, { desc = "LSP: Format Buffer" }))
       vim.keymap.set(
         "n",
-        "<F4>",
+        "<leader>ca",
         vim.lsp.buf.code_action,
         vim.tbl_extend("keep", opts, { desc = "LSP: Code Action" })
       )

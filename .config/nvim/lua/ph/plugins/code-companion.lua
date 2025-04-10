@@ -94,6 +94,18 @@ return {
 
     -- vim.keymap.set("n", "<leader>ch", "<cmd>CodeCompanionChat Toggle<cr>", { desc = "Open CodeCompanion chat" })
 
+    -- vim.keymap.set("n", "<leader>cc", function()
+    --   require("codecompanion").toggle({
+    --     window = {
+    --       layout = "float",
+    --       width = 0.7,
+    --       height = 0.9,
+    --       row = 0.1,
+    --       border = "rounded",
+    --     },
+    --   })
+    --   vim.cmd [[hi NormalFloat guibg=NONE]]
+    -- end, { desc = "CodeCompanion Chat - Floating window" })
     vim.keymap.set({ "n", "v" }, "<C-a>", "<cmd>CodeCompanionActions<cr>", { noremap = true, silent = true })
     vim.g.codecompanion_in_use = true
   end,

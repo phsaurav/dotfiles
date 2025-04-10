@@ -4,16 +4,15 @@ return {
   dependencies = {
     "nvim-lua/plenary.nvim",
     { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+    "nvim-telescope/telescope-ui-select.nvim",
   },
-
+  event = "VeryLazy",
   config = function()
     local telescope = require("telescope")
     local actions = require("telescope.actions")
     local builtin = require("telescope.builtin")
-    -- local transform_mod = require("telescope.actions.mt").transform_mod
-    -- local trouble = require("trouble")
-    -- local trouble_telescope = require("trouble.sources.telescope")
     local action_state = require("telescope.actions.state")
+    local themes = require("telescope.themes")
 
     local custom_actions = {}
 
@@ -24,21 +23,19 @@ return {
       if num_selections > 1 then
         actions.close(prompt_bufnr)
         for _, entry in ipairs(picker:get_multi_selection()) do
-          vim.cmd(string.format("%s %s", "edit", entry.value))
+          vim.cmd(string.format("edit %s", entry.value))
         end
       else
         actions.file_edit(prompt_bufnr)
       end
     end
 
-    -- Function to open selected file in horizontal split
     function custom_actions.file_split(prompt_bufnr)
       actions.close(prompt_bufnr)
       local selection = action_state.get_selected_entry()
       vim.cmd(string.format("split %s", selection.value))
     end
 
-    -- Function to open selected file in vertical split
     function custom_actions.file_vsplit(prompt_bufnr)
       actions.close(prompt_bufnr)
       local selection = action_state.get_selected_entry()
@@ -56,44 +53,46 @@ return {
         },
         layout_config = {
           vertical = {
-            preview_height = 0.5, -- Specific to the vertical layout
+            preview_height = 0.5,
             size = {
               width = "80%",
               height = "99%",
             },
           },
           horizontal = {
-            preview_width = 0.6, -- Example for horizontal layout
+            preview_width = 0.6,
           },
           center = {
-            width = 0.8,  -- Specific to center layout
-            height = 0.4, -- Use height instead of preview_height
+            width = 0.8,
+            height = 0.4,
           },
         },
         path_display = { "truncate" },
         mappings = {
           i = {
-            ["<C-k>"] = actions.move_selection_previous, -- move to prev result
-            ["<C-j>"] = actions.move_selection_next,     -- move to next result
+            ["<C-k>"] = actions.move_selection_previous,
+            ["<C-j>"] = actions.move_selection_next,
             ["<C-q>"] = actions.send_to_qflist + actions.open_qflist,
-            -- ["<C-t>"] = trouble_telescope.open,
             ["<C-v>"] = custom_actions.file_split,
             ["<C-h>"] = custom_actions.file_vsplit,
           },
         },
       },
+      extensions = {
+        ["ui-select"] = themes.get_dropdown({}),
+      },
     })
 
+    telescope.load_extension("ui-select")
     telescope.load_extension("fzf")
+
     local keymap = vim.keymap
 
-    keymap.set("n", "<leader>fd", builtin.find_files, { desc = "Telescope find files" })
-    keymap.set("n", "<leader>ff", function()
+    keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Telescope find files" })
+    keymap.set("n", "<leader>fd", function()
       builtin.find_files({ hidden = true, no_ignore = true })
     end, { desc = "Telescope find files" })
     keymap.set("n", "<leader>fg", builtin.git_files, { desc = "Git File Search" })
-    -- keymap.set("n", "<leader>fr", "<cmd>Telescope oldfiles<cr>", { desc = "Fuzzy find recent files" })
-    -- keymap.set("n", "<leader>fss", "<cmd>Telescope live_grep<cr>", { desc = "Find string in cwd" })
     keymap.set("n", "<leader>fs", function()
       builtin.live_grep({
         additional_args = function()
@@ -101,22 +100,22 @@ return {
         end
       })
     end)
-    keymap.set("n", "<leader>fc", "<cmd>Telescope grep_string<cr>", { desc = "Find string under cursor in cwd" })
+    keymap.set("n", "<leader>fc", "<cmd>Telescope grep_string<cr>", { desc = "Find string under cursor" })
     keymap.set("n", "<leader>bl", function()
-      builtin.buffers(require('telescope.themes').get_dropdown({
-        previewer = false,            -- Disables the preview window
-        show_all_buffers = true,      -- Shows all open buffers
-        sort_mru = true,              -- Sorts buffers by Most Recently Used
-        ignore_current_buffer = true, -- Hides the current buffer from the list
+      builtin.buffers(themes.get_dropdown({
+        previewer = false,
+        show_all_buffers = true,
+        sort_mru = true,
+        ignore_current_buffer = true,
         mappings = {
           i = {
             ["<C-d>"] = function(prompt_bufnr)
-              local current_picker = action_state.get_current_picker(prompt_bufnr)
+              local picker = action_state.get_current_picker(prompt_bufnr)
               local selection = action_state.get_selected_entry()
-              actions.close(prompt_bufnr)                                -- Close the picker
-              vim.api.nvim_buf_delete(selection.bufnr, { force = true }) -- Delete the selected buffer
+              actions.close(prompt_bufnr)
+              vim.api.nvim_buf_delete(selection.bufnr, { force = true })
             end,
-          },                                                             -- Use the delete_buffer action
+          },
         },
       }))
     end, { noremap = true, silent = true, desc = "Open Telescope buffer picker" })
