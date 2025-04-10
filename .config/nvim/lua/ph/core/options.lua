@@ -61,5 +61,7 @@ vim.diagnostic.config({
       min = vim.diagnostic.severity.ERROR,
     },
   },
+  virtual_text = { current_line = true },
+
   severity_sort = true,
 })

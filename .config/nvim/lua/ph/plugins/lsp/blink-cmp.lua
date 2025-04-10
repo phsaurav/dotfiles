@@ -2,7 +2,7 @@ return {
   {
     "saghen/blink.cmp",
     dependencies = { "saghen/blink.compat" }, -- Move blink-cmp-dictionary out of here
-    version = "*",
+    version = "1.*",
 
     opts = {
       keymap = {
@@ -54,7 +54,7 @@ return {
           "obsidian_new",
           "obsidian_tags",
           "markdown",
-          "dictionary", -- Keep this, but it’ll only work when loaded
+          "dictionary",
         },
         providers = {
           obsidian = {
@@ -97,8 +97,9 @@ return {
             },
           },
         },
-      },
 
+      },
+      fuzzy = { implementation = "prefer_rust_with_warning" },
       signature = {
         enabled = true,
         window = {

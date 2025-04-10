@@ -15,6 +15,8 @@ keymap.set("n", "cc", '"_cc')
 
 keymap.set("n", "go", "<C-o>")
 keymap.set("n", "gi", "<C-i>")
+keymap.set('n', 'g;', '%', { desc = "Go to matching bracket" })
+keymap.set('v', 'g;', '%', { desc = "Go to matching bracket" })
 
 keymap.set("v", ">", ">gv", { desc = "indent right" })
 keymap.set("v", "<", "<gv", { desc = "indent left" })
@@ -211,13 +213,13 @@ keymap.set({ "n", "v" }, "<leader>pb", function()
   vim.cmd("cd ~/Documents/Play_Ground/Blank/")
   print("Directory changed to ~/Documents/Play_Ground/Blank/")
 end, opt)
-keymap.set("n", "<C-s>", function()
-  if vim.api.nvim_buf_get_name(0) ~= "" then
-    save_file()
-  else
-    vim.ui.input({ prompt = "filename: " }, save_file)
-  end
-end)
+-- keymap.set("n", "<C-s>", function()
+--   if vim.api.nvim_buf_get_name(0) ~= "" then
+--     save_file()
+--   else
+--     vim.ui.input({ prompt = "filename: " }, save_file)
+--   end
+-- end)
 
 keymap.set("n", "<leader>yd", function()
   local cwd = vim.fn.getcwd()
