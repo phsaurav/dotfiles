@@ -1,4 +1,6 @@
 # Path to oh-my-zsh installation.
+export GHOSTTY_RESOURCES_DIR="/Applications/Ghostty.app/Contents/Resources/ghostty"
+source "${GHOSTTY_RESOURCES_DIR}/shell-integration/zsh/ghostty.zsh"
 export ZSH="$HOME/.oh-my-zsh"
 
 # Path configuration.

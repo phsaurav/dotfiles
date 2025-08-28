@@ -5,8 +5,7 @@ return {
     event = { "BufReadPre", "BufNewFile" },
     "williamboman/mason-lspconfig.nvim",
   },
-  cmd = "Mason",
-  ft = { "lua", "python", "go", "javascript", "typescript", "terraform", "dockerfile", "json", "sh" },
+  ft = { "lua", "python", "go", "dockerfile", "json", "sh", "yaml", "yml" },
   config = function()
     local mason = require("mason")
     -- import mason-lspconfig
@@ -31,8 +30,10 @@ return {
         "bashls",
         "jsonls",
         "pyright",
+        "yamlls",
       },
-      automatic_installation = true
+      automatic_installation = true,
+      automatic_enable = true
     })
 
     -- mason_tool_installer.setup({

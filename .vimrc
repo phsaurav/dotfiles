@@ -10,6 +10,9 @@ set mouse -=a
 " Add last character in selection
 set selection=inclusive
 
+" Reduce timeout for key codes, fixing the delay when pressing <Esc>
+set ttimeoutlen=50
+
 " Visual mode tab add indents
 vmap <Tab> >gv
 vmap <S-Tab> <gv
@@ -35,6 +38,12 @@ nnoremap <C-M-k> :resize +2<CR>
 " Clear search highlight
 nnoremap <leader>dd :nohl<CR>
 
+" Buffer Management
+nnoremap <silent> <leader>ba :b#<CR>  
+nnoremap <silent> <leader>bn :bnext<CR> 
+nnoremap <silent> <leader>bp :bprevious<CR> 
+nnoremap <silent> <leader>bd :bdelete<CR> 
+
 " Delete without yanking
 nnoremap c "_c
 nnoremap C "_C
@@ -52,6 +61,11 @@ nnoremap <leader>c :q<CR>
 " Split window
 nnoremap <leader>sh :vsplit<CR>
 nnoremap <leader>sv :split<CR>
+
+" Common Marker
+nnoremap <leader>j 'J
+nnoremap <leader>k 'K
+nnoremap <leader>l 'L
 
 " Move to matching parenthesis
 nnoremap g; %
@@ -100,4 +114,31 @@ nnoremap gsw :%s/\<<C-r><C-w>\>//g<Left><Left>
 
 " Visual Mode Substitution
 xnoremap gsw y:%s/<C-r>"//g<Left><Left>
+
+" Save file function
+function! SaveFile(filename)
+  try
+    if a:filename != ''
+      execute 'write ' . a:filename
+    endif
+  catch
+    echo 'Error saving file: ' . v:exception
+  endtry
+endfunction
+
+" Simple save (equivalent to <leader>w)
+nnoremap <silent> <leader>w :call SaveFile(expand('%'))<CR>
+vnoremap <silent> <leader>w :call SaveFile(expand('%'))<CR>
+
+" Change cursor shape for different modes
+" n-v-c: block, i: horizontal bar (underline), r: horizontal bar (underline)
+if exists('$TMUX')
+  let &t_EI = "\ePtmux;\e\e[1 q\e\\" " Normal mode: block
+  let &t_SI = "\ePtmux;\e\e[3 q\e\\" " Insert mode: underline (like horizontal bar)
+  let &t_SR = "\ePtmux;\e\e[3 q\e\\" " Replace mode: underline (like horizontal bar)
+else
+  let &t_EI = "\e[1 q" " Normal mode: block
+  let &t_SI = "\e[3 q" " Insert mode: underline (like horizontal bar)
+  let &t_SR = "\e[3 q" " Replace mode: underline (like horizontal bar)
+endif
 

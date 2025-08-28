@@ -1,6 +1,7 @@
 return {
   {
     "MeanderingProgrammer/render-markdown.nvim",
+    version = "v8.5.0",
     ft = { "markdown", "copilot-chat", "codecompanion" },
     dependencies = {
       "nvim-treesitter/nvim-treesitter",
@@ -30,20 +31,20 @@ return {
       })
     end,
   },
-  {
-    "iamcco/markdown-preview.nvim",
-    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
-    build = "cd app && yarn install",
-    init = function()
-      vim.g.mkdp_filetypes = { "markdown" }
-      vim.g.mkdp_markdown_image_path =
-      "/Users/phsaurav/Library/CloudStorage/GoogleDrive-phsaurav29@gmail.com/My Drive/[01] My_Folder/[04] Education/Obsidian-VaultHubs/Attachments"
-    end,
-    ft = { "markdown" },
-    keys = {
-      { "<leader>mp", "<cmd>MarkdownPreview<CR>", desc = "Markdown Preview" },
-    },
-  },
+  -- {
+  --   "iamcco/markdown-preview.nvim",
+  --   cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+  --   build = "cd app && yarn install",
+  --   init = function()
+  --     vim.g.mkdp_filetypes = { "markdown" }
+  --     vim.g.mkdp_markdown_image_path =
+  --     "/Users/phsaurav/Library/CloudStorage/GoogleDrive-phsaurav29@gmail.com/My Drive/[01] My_Folder/[04] Education/Obsidian-VaultHubs/Attachments"
+  --   end,
+  --   ft = { "markdown" },
+  --   keys = {
+  --     { "<leader>mp", "<cmd>MarkdownPreview<CR>", desc = "Markdown Preview" },
+  --   },
+  -- },
   {
     "epwalsh/obsidian.nvim",
     version = "*", -- recommended, use latest release instead of latest commit
@@ -187,6 +188,20 @@ return {
           vim.notify("Moved file to Zettelkasten: " .. target_path, vim.log.levels.INFO)
         end
       end, { desc = "Move file to Zettelkasten" })
+
+      vim.keymap.set("n", "<leader>oo", function()
+        local current_file = vim.fn.expand("%:p") -- Full path
+        local file = vim.fn.expand("%:t:r")       -- Filename without extension
+
+        -- Check if current file is in your Obsidian vault
+        if string.find(current_file, "Obsidian%-Vault") then
+          local vault_name = "Obsidian-Vault"
+          local obsidian_url = "obsidian://open?vault=" .. vault_name .. "&file=" .. file
+          vim.cmd("!open '" .. obsidian_url .. "'")
+        else
+          print("Current file is not in Obsidian vault")
+        end
+      end, { desc = "Open in Obsidian", noremap = true, silent = true })
 
       -- Delete file in current buffer
       vim.keymap.set("n", "<leader>odd", function()

@@ -43,6 +43,11 @@ keymap.set("v", "<C-c>", '"+y', opt)
 keymap.set("v", "<Tab>", ">gv")
 keymap.set("v", "<S-Tab>", "<gv")
 
+-- Common Marker
+keymap.set("n", "<leader>j", "'J", { desc = "Jump to marker J" })
+keymap.set("n", "<leader>k", "'K", { desc = "Jump to marker K" })
+keymap.set("n", "<leader>l", "'L", { desc = "Jump to marker L" })
+
 -- Wrapper (Updated to work with autopair plugin)
 keymap.set("x", "<leader>b", "<Esc>`>a)<Esc>`<i(<Esc>", { noremap = true, desc = "Wrap with parentheses" })
 keymap.set("x", "<leader>{", "<Esc>`>a}<Esc>`<i{<Esc>", { noremap = true, desc = "Wrap with curly braces" })
@@ -245,14 +250,14 @@ save_file = function(path)
   end
 end
 
-vim.keymap.set("n", "<leader>ch", function()
-  local has_cc, cc = pcall(require, "codecompanion")
-  if not has_cc then
-    vim.cmd("CodeCompanion")
-    vim.defer_fn(function()
-      vim.cmd("CodeCompanionChat Toggle")
-    end, 100)
-  else
-    vim.cmd("CodeCompanionChat Toggle")
-  end
-end, { desc = "Open CodeCompanion chat" })
+-- vim.keymap.set("n", "<leader>ch", function()
+--   local has_cc, cc = pcall(require, "codecompanion")
+--   if not has_cc then
+--     vim.cmd("CodeCompanion")
+--     vim.defer_fn(function()
+--       vim.cmd("CodeCompanionChat Toggle")
+--     end, 100)
+--   else
+--     vim.cmd("CodeCompanionChat Toggle")
+--   end
+-- end, { desc = "Open CodeCompanion chat" })

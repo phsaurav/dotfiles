@@ -4,7 +4,7 @@ return {
     "BufReadPost *.{lua,py,go,js,jsx,ts,tsx,tf,tfvars,dockerfile,json,sh,bash,zsh}",
     "BufNewFile *.{lua,py,go,js,jsx,ts,tsx,tf,tfvars,dockerfile,json,sh,bash,zsh}"
   },
-  ft = { "lua", "python", "go", "javascript", "typescript", "terraform", "dockerfile", "json", "sh" },
+  ft = { "lua", "python", "go", "dockerfile", "json", "sh", "yaml", "yml" },
   dependencies = {
     "saghen/blink.cmp",
   },
@@ -45,6 +45,47 @@ return {
       },
       pyright = {
         filetypes = { "python" },
+      },
+      yamlls = {
+        filetypes = { "yaml", "yml" },
+        yaml = {
+          schemas = {
+            ["https://json.schemastore.org/github-workflow.json"] = "/.github/workflows/*",
+            ["https://json.schemastore.org/github-action.json"] = "/action.{yml,yaml}",
+            ["https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json"] =
+            "docker-compose*.{yml,yaml}",
+            ["https://json.schemastore.org/kustomization.json"] = "kustomization.{yml,yaml}",
+            ["https://json.schemastore.org/ansible-meta.json"] = "meta/main.{yml,yaml}",
+            ["https://json.schemastore.org/ansible-playbook.json"] = "*play*.{yml,yaml}",
+            ["https://json.schemastore.org/ansible-inventory.json"] = "inventory*.{yml,yaml}",
+            ["https://raw.githubusercontent.com/instrumenta/kubernetes-json-schema/master/v1.18.0-standalone-strict/all.json"] =
+            "/*.k8s.{yml,yaml}",
+            ["https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json"] =
+            "**/docker-compose*.{yml,yaml}",
+          },
+          validate = true,
+          hover = true,
+          completion = true,
+          customTags = {
+            "!fn",
+            "!And",
+            "!If",
+            "!Not",
+            "!Equals",
+            "!Or",
+            "!FindInMap sequence",
+            "!Base64",
+            "!Cidr",
+            "!Ref",
+            "!Sub",
+            "!GetAtt",
+            "!GetAZs",
+            "!ImportValue",
+            "!Select",
+            "!Split",
+            "!Join sequence"
+          },
+        },
       },
     }
 
@@ -131,33 +172,33 @@ return {
 
     local util = require("lspconfig.util")
 
-    lspconfig.terraformls.setup({
-      capabilities = capabilities,
-      on_attach = function(client, bufnr)
-        -- Disable semantic tokens if not needed
-        client.server_capabilities.semanticTokensProvider = nil
-
-        -- Call your common on_attach function
-        on_attach(client, bufnr)
-      end,
-      flags = {
-        debounce_text_changes = 200,
-      },
-      root_dir = util.root_pattern(".terraform", ".git"),
-      settings = {
-        terraform = {
-          experimentalFeatures = {
-            validateOnSave = true,
-          },
-          languageServer = {
-            enable = true,
-            args = { "server" },
-          },
-          telemetry = {
-            enable = false,
-          },
-        },
-      },
-    })
+    -- lspconfig.terraformls.setup({
+    --   capabilities = capabilities,
+    --   on_attach = function(client, bufnr)
+    --     -- Disable semantic tokens if not needed
+    --     client.server_capabilities.semanticTokensProvider = nil
+    --
+    --     -- Call your common on_attach function
+    --     on_attach(client, bufnr)
+    --   end,
+    --   flags = {
+    --     debounce_text_changes = 200,
+    --   },
+    --   root_dir = util.root_pattern(".terraform", ".git"),
+    --   settings = {
+    --     terraform = {
+    --       experimentalFeatures = {
+    --         validateOnSave = true,
+    --       },
+    --       languageServer = {
+    --         enable = true,
+    --         args = { "server" },
+    --       },
+    --       telemetry = {
+    --         enable = false,
+    --       },
+    --     },
+    --   },
+    -- })
   end,
 }

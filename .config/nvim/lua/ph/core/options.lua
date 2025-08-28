@@ -5,6 +5,9 @@ opt.relativenumber = true
 opt.clipboard = "unnamedplus"
 opt.mouse = "a"
 
+-- Set cursor style
+opt.guicursor = "n-v-c:block,i-ci-ve:hor50,r-cr:hor25,o:hor50"
+
 opt.splitright = true
 opt.splitbelow = true
 

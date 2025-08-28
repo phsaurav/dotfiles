@@ -93,6 +93,7 @@ return {
       builtin.find_files({ hidden = true, no_ignore = true })
     end, { desc = "Telescope find files" })
     keymap.set("n", "<leader>fg", builtin.git_files, { desc = "Git File Search" })
+    keymap.set("n", "<leader>fm", builtin.marks, { desc = "Telescope find marks" })
     keymap.set("n", "<leader>fs", function()
       builtin.live_grep({
         additional_args = function()

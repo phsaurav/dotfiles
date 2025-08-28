@@ -1,7 +1,6 @@
 #╔═══════════════════════╗
 #║ Ghostty configuration ║
 #╚═══════════════════════╝
-
 #┌───────────────────────┐
 #│🛞 General settings    │
 #└───────────────────────┘
@@ -21,12 +20,13 @@ clipboard-read = allow
 clipboard-write = allow
 copy-on-select = true
 confirm-close-surface = always
+shell-integration-features = no-cursor
 
 #┌───────────────────────┐
 #│📗 Font settings       │
 #└───────────────────────┘
 font-size = 15.5
-adjust-cell-height = 13     
+adjust-cell-height = 18     
 # font-thicken = true
 font-family = Operator Mono SSm Nerd Lig
 font-family-bold = Operator Mono SSm Nerd Lig
@@ -38,13 +38,22 @@ font-style-italic = "Book Italic"
 font-style-bold-italic = "Book Italic"
 
 #┌───────────────────────┐
+#│ Quick Terminal        │
+#└───────────────────────┘
+quick-terminal-position= right
+quick-terminal-autohide = false
+quick-terminal-screen = main
+quick-terminal-animation-duration= 0
+
+#┌───────────────────────┐
 #│🎨 Theme settings      │
 #└───────────────────────┘
 theme = Ayu Mirage
 background = 262A33
 # foreground = ededed
 cursor-color = ffcc66
-cursor-style = bar
+cursor-style = "underline"
+adjust-underline-thickness = 100%
 palette = 0=#191e2a
 palette = 1=#ed8274
 palette = 2=#a6cc70
@@ -61,7 +70,7 @@ palette = 12=#73d0ff
 palette = 13=#d4bfff
 palette = 14=#95e6cb
 palette = 15=#ffffff
-background-opacity = 0.85
+background-opacity = 0.9
 background-blur-radius = 200
 unfocused-split-opacity = .84
 
@@ -77,7 +86,7 @@ keybind = ctrl+shift+h=goto_split:left
 keybind = ctrl+shift+j=goto_split:bottom
 keybind = ctrl+shift+k=goto_split:top
 keybind = ctrl+shift+l=goto_split:right
-keybind = ctrl+;=toggle_quick_terminal
+keybind = global:ctrl+;=toggle_quick_terminal
 keybind = super+c=copy_to_clipboard
 keybind = ctrl+shift+enter=toggle_split_zoom
 keybind = ctrl+shift+t=toggle_tab_overview

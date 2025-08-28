@@ -33,7 +33,7 @@ return {
   --   },
   --   opts = {
   --     agent = 'copilot',
-  --     model = 'claude-3.7-sonnet',
+  --     model = 'claude-sonnet-4',
   --     show_help = true,  -- Shows help message as virtual lines when waiting for user input
   --     show_folds = true, -- Shows folds for sections in chat
   --     chat_autocomplete = false,
@@ -89,6 +89,14 @@ return {
   --     { "<leader>ce", ":CopilotChatExplain<CR>", desc = "CopilotChat - Explain code" },
   --     { "<leader>cf", ":CopilotChatFix<CR>",     desc = "CopilotChat - Explain code" },
   --     -- { "<leader>co", ":CopilotChatOptimize<CR>", desc = "CopilotChat - Explain code" },
+  --     {
+  --       "<leader>cy",
+  --       function()
+  --         vim.fn.setreg("+", "> #file:`" .. vim.fn.expand("%:p") .. "`")
+  --         vim.notify("Current file path copied to clipboard")
+  --       end,
+  --       desc = "Copy current file path for Copilot context"
+  --     },
   --   },
   -- },
 }
