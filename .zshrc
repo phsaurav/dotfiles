@@ -77,23 +77,24 @@ bindkey -M viins 'kj' vi-cmd-mode
 
 # pyenv initialization.
 eval "$(pyenv init -)"
-# Change cursor with vim mode.
-function zle-keymap-select() {
-  case $KEYMAP in
-    vicmd) echo -ne '\e[1 q';; # block
-    viins|main) echo -ne '\e[3 q';; # underscore
-  esac
-}
-zle -N zle-keymap-select
-
-zle-line-init() {
-  echo -ne "\e[3 q"
-}
-zle -N zle-line-init
-
-preexec() {
-  echo -ne "\e[3 q"
-}
+# # Change cursor with vim mode.
+# function zle-keymap-select() {
+#   case $KEYMAP in
+#     vicmd) echo -ne '\e[1 q';; # block
+#     viins|main) echo -ne '\e[4 q';; # thicker underscore
+#   esac
+#
+# zle -N zle-keymap-select
+#
+# zle-line-init() {
+#   echo -ne "\e[4 q"
+# }
+# zle -N zle-line-init
+#
+# preexec() {
+#   echo -ne "\e[4 q"
+# }
+echo -e '\e[0 q' 
 bindkey '^R' fzf-history-widget
 
 export FZF_CTRL_R_OPTS="

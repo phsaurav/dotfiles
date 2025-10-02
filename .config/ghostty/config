@@ -7,7 +7,8 @@
 window-vsync = true
 shell-integration = zsh
 window-inherit-working-directory = true
-window-decoration = true
+window-decoration = auto
+window-show-tab-bar = never
 macos-titlebar-style = hidden
 macos-option-as-alt = true
 window-new-tab-position = current
@@ -15,7 +16,7 @@ window-theme = dark
 window-height = 1000
 window-width = 1600
 window-padding-x = 10
-window-padding-y = 10, 0
+window-padding-y = 10,0
 clipboard-read = allow
 clipboard-write = allow
 copy-on-select = true
@@ -25,8 +26,8 @@ shell-integration-features = no-cursor
 #┌───────────────────────┐
 #│📗 Font settings       │
 #└───────────────────────┘
-font-size = 15.5
-adjust-cell-height = 18     
+font-size = 16
+adjust-cell-height = 18
 # font-thicken = true
 font-family = Operator Mono SSm Nerd Lig
 font-family-bold = Operator Mono SSm Nerd Lig
@@ -52,8 +53,7 @@ theme = Ayu Mirage
 background = 262A33
 # foreground = ededed
 cursor-color = ffcc66
-cursor-style = "underline"
-adjust-underline-thickness = 100%
+cursor-style = "block"
 palette = 0=#191e2a
 palette = 1=#ed8274
 palette = 2=#a6cc70
@@ -88,6 +88,7 @@ keybind = ctrl+shift+k=goto_split:top
 keybind = ctrl+shift+l=goto_split:right
 keybind = global:ctrl+;=toggle_quick_terminal
 keybind = super+c=copy_to_clipboard
+keybind = opt+space=toggle_command_palette
 keybind = ctrl+shift+enter=toggle_split_zoom
 keybind = ctrl+shift+t=toggle_tab_overview
 # keybind = super+c=unbind
