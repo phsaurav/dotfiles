@@ -74,7 +74,7 @@ return {
             ["<C-j>"] = actions.move_selection_next,
             ["<C-q>"] = actions.send_to_qflist + actions.open_qflist,
             ["<C-v>"] = custom_actions.file_split,
-            ["<C-h>"] = custom_actions.file_vsplit,
+            ["<C-s>"] = custom_actions.file_vsplit,
           },
         },
       },

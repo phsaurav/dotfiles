@@ -45,12 +45,14 @@ quick-terminal-position= right
 quick-terminal-autohide = false
 quick-terminal-screen = main
 quick-terminal-animation-duration= 0
+quick-terminal-size = 1080px
 
 #┌───────────────────────┐
 #│🎨 Theme settings      │
 #└───────────────────────┘
 theme = Ayu Mirage
-background = 262A33
+# background = 262A33
+background = 1F2430
 # foreground = ededed
 cursor-color = ffcc66
 cursor-style = "block"
@@ -70,9 +72,9 @@ palette = 12=#73d0ff
 palette = 13=#d4bfff
 palette = 14=#95e6cb
 palette = 15=#ffffff
-background-opacity = 0.9
-background-blur-radius = 200
-unfocused-split-opacity = .84
+background-opacity = .95
+background-blur-radius = 50
+unfocused-split-opacity = .9
 
 #┌───────────────────────┐
 #│🎹 Keybindings         │

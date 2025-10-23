@@ -2,6 +2,7 @@ vim.g.mapleader = " "
 
 local keymap = vim.keymap
 local opt = { noremap = true, silent = true }
+local replacer = require('ph.utils.replacer')
 
 keymap.set("i", "kj", "<Esc>")
 keymap.set("n", "<leader>eo", vim.cmd.Ex) -- Open Explorer
@@ -12,6 +13,8 @@ keymap.set({ "n", "v" }, "c", '"_c', { noremap = true })
 keymap.set({ "n", "v" }, "C", '"_C', { noremap = true })
 keymap.set("n", "cc", '"_cc')
 
+-- Undo
+keymap.set("i", ' ', ' <C-g>u', { noremap = true })
 
 keymap.set("n", "go", "<C-o>")
 keymap.set("n", "gi", "<C-i>")
@@ -36,9 +39,17 @@ keymap.set("n", "<C-M-j>", ":resize -2<CR>", { silent = true, desc = "Decrease h
 keymap.set("n", "<C-M-k>", ":resize +2<CR>", { silent = true, desc = "Increase height" })
 
 -- Replace
-keymap.set("n", "gsw", [[:%s/\<<C-r><C-w>\>//g<Left><Left>]], { noremap = true, silent = false })
-keymap.set("v", "gsw", [[y:%s/<C-r>"//g<Left><Left>]], { noremap = true, silent = false })
+-- keymap.set("n", "gsw", [[:%s/\<<C-r><C-w>\>//g<Left><Left>]], { noremap = true, silent = false })
+-- keymap.set("v", "gsw", [[y:%s/<C-r>"//g<Left><Left>]], { noremap = true, silent = false })
 keymap.set("v", "<C-c>", '"+y', opt)
+keymap.set('n', 'gsw', replacer.replace_word_under_cursor,
+  { noremap = true, silent = true, desc = 'Replace word under cursor in buffer' })
+
+keymap.set('v', 'gsw', replacer.replace_visual_selection_in_buffer,
+  { noremap = true, silent = true, desc = 'Replace visual selection in buffer' })
+
+keymap.set('v', 'gsg', replacer.replace_visual_selection_projectwide,
+  { noremap = true, silent = true, desc = 'Project-wide replace with approval' })
 
 keymap.set("v", "<Tab>", ">gv")
 keymap.set("v", "<S-Tab>", "<gv")
@@ -47,6 +58,12 @@ keymap.set("v", "<S-Tab>", "<gv")
 keymap.set("n", "<leader>j", "'J", { desc = "Jump to marker J" })
 keymap.set("n", "<leader>k", "'K", { desc = "Jump to marker K" })
 keymap.set("n", "<leader>l", "'L", { desc = "Jump to marker L" })
+
+keymap.set("n", "<leader>ddm", function()
+  vim.cmd("delmarks A-Z0-9")
+  vim.cmd("delmarks!")
+  vim.notify("All markers deleted", vim.log.levels.INFO)
+end, { noremap = true, silent = true, desc = "Delete all markers" })
 
 -- Wrapper (Updated to work with autopair plugin)
 keymap.set("x", "<leader>b", "<Esc>`>a)<Esc>`<i(<Esc>", { noremap = true, desc = "Wrap with parentheses" })
@@ -117,8 +134,21 @@ vim.keymap.set("n", "<leader>dk", function()
 end, { desc = "Open float and copy diagnostic message under cursor" })
 
 
-keymap.set("n", "<leader>dn", vim.diagnostic.goto_next, opt)
-keymap.set("n", "<leader>dp", vim.diagnostic.goto_prev, opt)
+local function diag_jump(delta)
+  local opts = { float = { border = "rounded", source = true } }
+
+  if vim.diagnostic.jump then -- 0.11+ (or nightly)
+    opts.count = delta
+    vim.diagnostic.jump(opts)
+  elseif delta > 0 then -- backward-compatible fallback
+    vim.diagnostic.goto_next(opts)
+  else
+    vim.diagnostic.goto_prev(opts)
+  end
+end
+
+keymap.set("n", "<leader>dn", function() diag_jump(1) end, opt)
+keymap.set("n", "<leader>dp", function() diag_jump(-1) end, opt)
 keymap.set("n", "<leader>cc", "<Cmd>cclose<CR>", opt)
 keymap.set("n", "<leader>co", "<Cmd>copen<CR>", opt)
 keymap.set("n", "<leader>cn", "<Cmd>cnext<CR>", opt)
@@ -250,14 +280,35 @@ save_file = function(path)
   end
 end
 
--- vim.keymap.set("n", "<leader>ch", function()
---   local has_cc, cc = pcall(require, "codecompanion")
---   if not has_cc then
---     vim.cmd("CodeCompanion")
---     vim.defer_fn(function()
---       vim.cmd("CodeCompanionChat Toggle")
---     end, 100)
---   else
---     vim.cmd("CodeCompanionChat Toggle")
---   end
--- end, { desc = "Open CodeCompanion chat" })
+-- Add K8s schema modeline with a keymap
+vim.keymap.set('n', '<leader>ks', function()
+  local resources = {
+    'deployment',
+    'service',
+    'configmap',
+    'secret',
+    'ingress',
+    'statefulset',
+    'daemonset',
+    'pod',
+    'namespace',
+    'job',
+    'cronjob',
+    'persistentvolumeclaim',
+    'persistentvolume',
+  }
+
+  vim.ui.select(resources, {
+    prompt = 'Select Kubernetes resource type:',
+  }, function(choice)
+    if choice then
+      local schema_line = string.format(
+        '# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.33.5-standalone-strict/%s.json',
+        choice
+      )
+      local current_line = vim.api.nvim_win_get_cursor(0)[1] - 1
+      vim.api.nvim_buf_set_lines(0, current_line, current_line, false, { schema_line, ''
+      })
+    end
+  end)
+end, { desc = 'Add K8s Schema' })

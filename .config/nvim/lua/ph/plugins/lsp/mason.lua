@@ -5,7 +5,7 @@ return {
     event = { "BufReadPre", "BufNewFile" },
     "williamboman/mason-lspconfig.nvim",
   },
-  ft = { "lua", "python", "go", "dockerfile", "json", "sh", "yaml", "yml" },
+  ft = { "lua", "python", "go", "dockerfile", "json", "sh", "yaml", "yml", "html", "css", "templ" },
   config = function()
     local mason = require("mason")
     -- import mason-lspconfig
@@ -31,6 +31,11 @@ return {
         "jsonls",
         "pyright",
         "yamlls",
+        "tailwindcss",
+        "html",
+        "cssls",
+        "golangci_lint_ls",
+        "templ",
       },
       automatic_installation = true,
       automatic_enable = true
