@@ -3,7 +3,7 @@ return {
   event = { "BufReadPre", "BufNewFile" },
   build = ":TSUpdate",
   config = function()
-    require("nvim-treesitter.configs").setup({
+    require("nvim-treesitter").setup({
       modules = {},         -- Leave empty unless you want to configure custom modules
       sync_install = false, -- Install parsers synchronously
       auto_install = true,  -- Automatically install missing parsers
