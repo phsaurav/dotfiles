@@ -3,6 +3,14 @@
 # Install stow
 yay -S --noconfirm --needed stow
 
+# Install hyprswitch (Hyprland window switcher/launcher)
+if ! command -v hyprswitch &>/dev/null; then
+    echo "Installing hyprswitch..."
+    yay -S --noconfirm --needed hyprswitch
+else
+    echo "hyprswitch is already installed."
+fi
+
 # Install Zsh
 if ! command -v zsh &>/dev/null; then
     yay -S --noconfirm --needed zsh
@@ -25,3 +33,4 @@ fi
 if ! command -v code &>/dev/null; then
     yay -S --noconfirm --needed visual-studio-code-bin
 fi
+
