@@ -103,7 +103,7 @@ function zvm_after_init() {
   bindkey '^k' autosuggest-execute
   bindkey '^j' autosuggest-accept
   bindkey -s '^;' '^[f'
-  bindkey '^R' fzf-history-widget
+  # bindkey '^R' fzf-history-widget
 }
 
 
@@ -189,3 +189,9 @@ function venv_prompt_override() {
 
 autoload -U add-zsh-hook
 add-zsh-hook precmd venv_prompt_override
+
+. "$HOME/.atuin/bin/env"
+
+eval "$(atuin init zsh)"
+bindkey '^r' atuin-search
+
