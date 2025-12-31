@@ -34,3 +34,13 @@ if ! command -v code &>/dev/null; then
     yay -S --noconfirm --needed visual-studio-code-bin
 fi
 
+# Install and setup Atuin (local-only, no sync or account)
+if ! command -v atuin &>/dev/null; then
+    echo "Installing Atuin (local-only mode)..."
+    bash <(curl --proto '=https' --tlsv1.2 -sSf https://setup.atuin.sh)
+    
+    echo "Importing existing shell history into Atuin..."
+    
+else
+    echo "Atuin is already installed."
+fi
