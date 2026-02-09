@@ -5,7 +5,8 @@ return {
     event = { "BufReadPre", "BufNewFile" },
     "williamboman/mason-lspconfig.nvim",
   },
-  ft = { "lua", "python", "go", "dockerfile", "json", "sh", "yaml", "yml", "html", "css", "templ" },
+ft = { "lua", "python", "go", "dockerfile", "json", "sh", "yaml", "yml", "html", "css", "templ", "javascript", "javascriptreact", "typescript", "typescriptreact" },
+
   config = function()
     local mason = require("mason")
     -- import mason-lspconfig

@@ -52,6 +52,7 @@ alias klf='kubectl logs -f'
 alias ka='kubectl apply -f'
 alias kctx='kubectl config get-contexts'
 alias kuse='kubectl config use-context'
+alias cc='claude --settings ~/.config/claude/ask-mode.json'
 
 # Alias Functions
 wt() {
@@ -195,3 +196,7 @@ add-zsh-hook precmd venv_prompt_override
 eval "$(atuin init zsh)"
 bindkey '^r' atuin-search
 
+
+# add Pulumi to the PATH
+export PATH=$PATH:/home/phs/.pulumi/bin
+export PATH=$PATH:/home/phs/.pulumi/bin

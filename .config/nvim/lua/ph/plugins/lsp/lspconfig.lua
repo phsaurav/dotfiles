@@ -4,7 +4,8 @@ return {
     "BufReadPost *.{lua,py,go,js,jsx,ts,tsx,tf,tfvars,dockerfile,json,sh,bash,zsh,html,css,templ}",
     "BufNewFile *.{lua,py,go,js,jsx,ts,tsx,tf,tfvars,dockerfile,json,sh,bash,zsh,html,css,templ}",
   },
-  ft = { "lua", "python", "go", "dockerfile", "json", "sh", "yaml", "yml", "html", "css", "templ" },
+  ft = { "lua", "python", "go", "dockerfile", "json", "sh", "yaml", "yml", "html", "css", "templ", "javascript", "javascriptreact", "typescript", "typescriptreact" },
+
   dependencies = { "saghen/blink.cmp" },
   config = function()
     vim.opt.signcolumn = "yes"
@@ -207,6 +208,40 @@ return {
           },
         },
       },
+       ts_ls = {
+      filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
+      settings = {
+        typescript = {
+          inlayHints = {
+            includeInlayParameterNameHints = "all",
+            includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+            includeInlayFunctionParameterTypeHints = true,
+            includeInlayVariableTypeHints = true,
+            includeInlayPropertyDeclarationTypeHints = true,
+            includeInlayFunctionLikeReturnTypeHints = true,
+            includeInlayEnumMemberValueHints = true,
+          },
+        },
+        javascript = {
+          inlayHints = {
+            includeInlayParameterNameHints = "all",
+            includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+            includeInlayFunctionParameterTypeHints = true,
+            includeInlayVariableTypeHints = true,
+            includeInlayPropertyDeclarationTypeHints = true,
+            includeInlayFunctionLikeReturnTypeHints = true,
+            includeInlayEnumMemberValueHints = true,
+          },
+        },
+      },
+    },
+    eslint = {
+      filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
+      settings = {
+        workingDirectories = { mode = "auto" },
+      },
+    },
+
       templ = {
         filetypes = { "templ" },
       },
