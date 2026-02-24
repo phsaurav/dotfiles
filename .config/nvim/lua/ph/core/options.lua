@@ -68,3 +68,22 @@ vim.diagnostic.config({
 
   severity_sort = true,
 })
+
+-- Auto-reload files changed outside of Neovim
+vim.opt.autoread = true
+-- Trigger checktime when these events fire (cursor moves, focus gained, etc.)
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
+  pattern = "*",
+  callback = function()
+    if vim.fn.mode() ~= "c" then
+      vim.cmd("checktime")
+    end
+  end,
+})
+-- Notify when a file has been changed and reloaded
+vim.api.nvim_create_autocmd("FileChangedShellPost", {
+  pattern = "*",
+  callback = function()
+    vim.notify("File changed on disk. Buffer reloaded.", vim.log.levels.WARN)
+  end,
+})
