@@ -27,6 +27,10 @@ if [ $? -eq 0 ]; then
   echo "removing old configs"
   rm -rf ~/.config/nvim ~/.config/starship.toml ~/.local/share/nvim/ ~/.cache/nvim/ ~/.config/ghostty/config ~/.zshrc
 
+  # Remove omarchy-managed plain files that stow will replace with symlinks
+  rm -f ~/.config/tmux/tmux.conf
+  rm -f ~/.config/opencode/opencode.json
+
   cd "$REPO_NAME"
   stow .
   cd "$ORIGINAL_DIR"

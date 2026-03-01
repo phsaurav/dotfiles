@@ -26,17 +26,17 @@ shell-integration-features = no-cursor
 #┌───────────────────────┐
 #│📗 Font settings       │
 #└───────────────────────┘
-font-size = 16
-adjust-cell-height = 18
+font-size = 12
+adjust-cell-height = 14
 # font-thicken = true
-font-family = Operator Mono SSm Nerd Lig
-font-family-bold = Operator Mono SSm Nerd Lig
-font-family-italic = Operator Mono SSm Nerd Lig
-font-style-bold-italic = Operator Mono SSm Nerd Lig
-font-style = "Book"
-font-style-bold = "Book"
-font-style-italic = "Book Italic"
-font-style-bold-italic = "Book Italic"
+# font-family = Operator Mono SSm Nerd Lig
+# font-family-bold = Operator Mono SSm Nerd Lig
+# font-family-italic = Operator Mono SSm Nerd Lig
+# font-style-bold-italic = Operator Mono SSm Nerd Lig
+# font-style = "Book"
+# font-style-bold = "Book"
+# font-style-italic = "Book Italic"
+# font-style-bold-italic = "Book Italic"
 
 #┌───────────────────────┐
 #│ Quick Terminal        │

@@ -11,14 +11,18 @@ if ! command -v tmux &>/dev/null; then
   exit 1
 fi
 
-TPM_DIR="$HOME/.tmux/plugins/tpm"
+TPM_DIR="$HOME/.config/tmux/plugins/tpm"
+
+# Ensure XDG config dir exists
+mkdir -p "$HOME/.config/tmux/plugins"
 
 # Check if TPM is already installed
 if [ -d "$TPM_DIR" ]; then
   echo "TPM is already installed in $TPM_DIR"
 else
   echo "Installing Tmux Plugin Manager (TPM)..."
-  git clone https://github.com/tmux-plugins/tpm $TPM_DIR
+  git clone https://github.com/tmux-plugins/tpm "$TPM_DIR"
 fi
 
-echo "TPM installed successfully!"
+echo "TPM installed successfully at $TPM_DIR"
+echo "Launch tmux and press prefix + I to install plugins."
