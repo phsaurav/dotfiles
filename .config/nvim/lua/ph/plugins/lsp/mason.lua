@@ -37,6 +37,7 @@ ft = { "lua", "python", "go", "dockerfile", "json", "sh", "yaml", "yml", "html",
         "cssls",
         "golangci_lint_ls",
         "templ",
+        "ts_ls",
       },
       automatic_installation = true,
       automatic_enable = true

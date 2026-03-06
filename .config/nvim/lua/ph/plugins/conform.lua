@@ -34,7 +34,16 @@ return {
     conform.setup({
       formatters_by_ft = {
         go = { "gofmt" },
-        python = { "black", "isort" } -- Add isort for import sorting
+        python = { "black", "isort" },
+        javascript = { "prettier" },
+        javascriptreact = { "prettier" },
+        typescript = { "prettier" },
+        typescriptreact = { "prettier" },
+        css = { "prettier" },
+        html = { "prettier" },
+        json = { "prettier" },
+        yaml = { "prettier" },
+        markdown = { "prettier" },
       },
       format_on_save = {
         lsp_fallback = true,

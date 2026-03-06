@@ -235,13 +235,6 @@ return {
         },
       },
     },
-    eslint = {
-      filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
-      settings = {
-        workingDirectories = { mode = "auto" },
-      },
-    },
-
       templ = {
         filetypes = { "templ" },
       },
@@ -260,7 +253,6 @@ return {
     for server, opts in pairs(servers) do
       setup_server(server, opts)
     end
-
     -- local util = require("lspconfig.util")
   end,
 }

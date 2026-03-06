@@ -42,6 +42,7 @@ opt.scrolloff = 8
 opt.signcolumn = "yes"
 opt.isfname:append("@-@")
 
+opt.cmdheight = 0
 opt.updatetime = 50
 opt.colorcolumn = "100"
 

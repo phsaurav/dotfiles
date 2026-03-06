@@ -26,7 +26,10 @@ return {
         "javascript",
         "python",
         "terraform",
-        "typescript"
+        "typescript",
+        "tsx",
+        "css",
+        "scss"
       },
       incremental_selection = {
         enable = true,

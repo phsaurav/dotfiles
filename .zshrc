@@ -200,3 +200,5 @@ bindkey '^r' atuin-search
 # add Pulumi to the PATH
 export PATH=$PATH:/home/phs/.pulumi/bin
 export PATH=$PATH:/home/phs/.pulumi/bin
+
+. "$HOME/.local/share/../bin/env"
