@@ -2,3 +2,9 @@
 .git
 .gitignore
 README.md
+LICENSE
+scripts
+settings.json
+Raycast.*\.rayconfig
+\.nvim\.dotfiles\.shada
+\.stow-local-ignore
