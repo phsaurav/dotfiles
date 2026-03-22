@@ -7,6 +7,7 @@ tools:
   read: true
   glob: true
   grep: true
+  fast_search: true
   write: false
   edit: false
 permission:

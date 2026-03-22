@@ -4,12 +4,14 @@ mode: subagent
 temperature: 0.1
 tools:
   bash: true
+  read: true
+  glob: true
+  grep: true
+  fast_search: true
   write: false
   edit: false
 permission:
   bash:
-    "rg *": allow
-    "fd *": allow
     "git diff": allow
     "git log": allow
     "cat *": allow

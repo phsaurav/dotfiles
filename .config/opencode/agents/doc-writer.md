@@ -4,13 +4,14 @@ mode: subagent
 temperature: 0.1
 tools:
   bash: true
+  read: true
+  glob: true
+  grep: true
+  fast_search: true
   write: true
   edit: true
 permission:
   bash:
-    "rg *": allow
-    "grep *": allow
-    "fd *": allow
     "npx typedoc *": allow
     "npx jsdoc *": allow
     "sphinx-build *": allow

@@ -6,6 +6,10 @@ tools:
   write: false
   edit: false
   bash: true
+  read: true
+  glob: true
+  grep: true
+  fast_search: true
 permission:
   edit: deny
   write: deny
