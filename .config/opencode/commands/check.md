@@ -1,6 +1,6 @@
 ---
 description: Check codebase for lint/test issues
-agent: general
+agent: senior-reviewer
 ---
 
 Check the codebase for lint errors, syntax issues, and test failures.

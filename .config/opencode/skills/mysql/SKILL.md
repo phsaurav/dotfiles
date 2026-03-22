@@ -1,11 +1,12 @@
 ---
 name: mysql
-description: Plan and review MySQL/InnoDB schema, indexing, query tuning, transactions, and operations. Use when creating or modifying MySQL tables, indexes, or queries; diagnosing slow/locking behavior; planning migrations; or troubleshooting replication and connection issues.
+description: Plan and review MySQL/InnoDB schema, indexing, query tuning, transactions, and operations. Use when creating or modifying MySQL tables, indexes, or queries; diagnosing slow/locking behavior; planning migrations; or troubleshooting replication and connection issues. Load when using a MySQL database.
 ---
 
 # MySQL
 
 Use this skill to make safe, measurable MySQL/InnoDB changes.
+
 
 ## Workflow
 1. Define workload and constraints (read/write mix, latency target, data volume, MySQL version, hosting platform).
