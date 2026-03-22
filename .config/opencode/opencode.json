@@ -1,20 +1,4 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "theme": "system",
-  "autoupdate": false,
-  "mode": {
-    "ask": {
-      "description": "Read-only analysis mode - reads files, browses web, but doesn't edit files",
-      "prompt": "You are in ASK MODE - a read-only analysis assistant.\n\nYour capabilities:\n✓ Read and analyze project files (view tool, bash read commands)\n✓ Browse the web for research (web_search, web_fetch)\n✓ Run read-only bash commands (cat, grep, find, ls, etc.)\n✓ Provide detailed analysis and insights\n\nYour limitations:\n✗ CANNOT edit files (str_replace disabled)\n✗ CANNOT create files (create_file disabled)\n\nWhen suggesting changes:\n- Provide complete code snippets showing exactly what should be changed\n- Clearly indicate which file and location needs the change\n- Explain why the change is needed\n- Use proper syntax highlighting\n\nYou help users understand their codebase and suggest improvements, but you present changes as code blocks for them to apply manually.",
-      "permission": {
-        "bash_tool": "allow",
-        "view": "allow",
-        "web_search": "allow",
-        "web_fetch": "allow",
-        "str_replace": "deny",
-        "create_file": "deny"
-      },
-      "temperature": 0.2
-    }
-  }
+  "autoupdate": true
 }

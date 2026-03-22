@@ -12,13 +12,13 @@ return {
     config = function()
       -- Safely disable Obsidian UI if it exists
       require("render-markdown").setup({
-       code = {
+        code = {
           border = 'none',
           enabled = false,
-          style = 'language', 
+          style = 'language',
           language_display = {
-            virtual_text = true, 
-            width = 'block',  
+            virtual_text = true,
+            width = 'block',
           },
         },
       })
@@ -64,7 +64,7 @@ return {
         {
           name = "ob-vault",
           path =
-          "/home/phs/obsidian",
+          "/Users/phsaurav/Library/CloudStorage/GoogleDrive-phsaurav29@gmail.com/My Drive/[01] My_Folder/[04] Education/Obsidian-Vault",
         },
       },
       notes_subdir = "inbox",
