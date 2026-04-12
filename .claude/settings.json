@@ -1,0 +1,11 @@
+{
+  "effortLevel": "high",
+  "mcpServers": {
+    "playwright": {
+      "command": "/opt/homebrew/bin/npx",
+      "args": [
+        "@playwright/mcp@latest"
+      ]
+    }
+  }
+}
