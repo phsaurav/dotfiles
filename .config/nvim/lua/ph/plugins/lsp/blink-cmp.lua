@@ -1,6 +1,7 @@
 return {
   {
     "saghen/blink.cmp",
+    event = { "InsertEnter", "CmdlineEnter" },
     dependencies = { "saghen/blink.compat" }, -- Move blink-cmp-dictionary out of here
     version = "1.*",
 

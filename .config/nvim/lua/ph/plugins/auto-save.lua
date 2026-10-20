@@ -3,7 +3,6 @@ return {
   version = '^1.0.0',
   cmd = "ASToggle",
   event = { "InsertLeave", "TextChanged" },
-  very_lazy = true,
   opts = {
     trigger_events = {
       immediate_save = { "BufLeave", "FocusLost", "QuitPre", "VimSuspend" }, -- vim events that trigger an immediate save

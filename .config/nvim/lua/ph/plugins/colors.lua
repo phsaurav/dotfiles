@@ -1,6 +1,6 @@
 return {
   "Shatur/neovim-ayu",
-  as = "ayu",
+  lazy = false,
   priority = 1000,
   config = function()
     require("ayu").setup({
@@ -15,11 +15,16 @@ return {
         CursorLine = { bg = "None" },
         CursorColumn = { bg = "None" },
         WhichKeyFloat = { bg = "None" },
-        VertSplit = { bg = "None" },
-        Keyword = { italic = true, fg = "#ffaf00" },
-        border = { bg = "None", fg = "None" }
+        VertSplit = { fg = "#ffaf00", bg = "NONE" },
+        LineNr = { fg = "#5a4c3c", bg = "NONE" },
+        CursorLineNr = { fg = "#ffaf00", bg = "NONE" },
+        Keyword = { italic = true, fg = "#FFA759" },
+        Parameter = { italic = true, fg = "#ffaf00" },
+        border = { bg = "None", fg = "None" },
+        WinSeparator = { fg = "#101521", bg = "NONE" },
       },
     })
-    vim.cmd("colorscheme ayu")
+
+    vim.cmd.colorscheme("ayu")
   end,
 }

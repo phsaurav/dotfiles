@@ -1,15 +1,8 @@
 return {
   "neovim/nvim-lspconfig",
-  event = {
-    "BufReadPost *.{lua,py,go,js,jsx,ts,tsx,tf,tfvars,dockerfile,json,sh,bash,zsh,html,css,templ}",
-    "BufNewFile *.{lua,py,go,js,jsx,ts,tsx,tf,tfvars,dockerfile,json,sh,bash,zsh,html,css,templ}",
-  },
-  ft = { "lua", "python", "go", "dockerfile", "json", "sh", "yaml", "yml", "html", "css", "templ", "javascript", "javascriptreact", "typescript", "typescriptreact" },
-
-  dependencies = { "saghen/blink.cmp" },
+  event = { "BufReadPre", "BufNewFile" },
+  dependencies = { "saghen/blink.cmp", "williamboman/mason.nvim" },
   config = function()
-    vim.opt.signcolumn = "yes"
-
     local base_capabilities = vim.lsp.protocol.make_client_capabilities()
     local capabilities = require("blink.cmp").get_lsp_capabilities(base_capabilities)
     local tb = require('telescope.builtin')
@@ -42,32 +35,17 @@ return {
         vim.tbl_extend("keep", opts, { desc = "LSP: Go to Declaration" }))
       vim.keymap.set("n", "ga", vim.lsp.buf.signature_help,
         vim.tbl_extend("keep", opts, { desc = "LSP: Show Signature Help" }))
-      vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>',
-        { noremap = true, silent = true })
       vim.keymap.set('n', 'gr', tb.lsp_references, { buffer = bufnr, desc = 'References' })
       vim.keymap.set('n', 'gi', tb.lsp_implementations, { buffer = bufnr, desc = 'Implementation' })
       vim.keymap.set('n', 'gt', tb.lsp_type_definitions, { buffer = bufnr, desc = 'Type' })
       vim.keymap.set({ "n", "x" }, "<F3>", function()
-        vim.lsp.buf.format({ async = true })
+        require("conform").format({ async = true, lsp_fallback = true })
       end, vim.tbl_extend("keep", opts, { desc = "LSP: Format Buffer" }))
       vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action,
         vim.tbl_extend("keep", opts, { desc = "LSP: Code Action" }))
     end
 
-    vim.diagnostic.config({
-      virtual_text = false,
-      signs = {
-        text = {
-          [vim.diagnostic.severity.ERROR] = "✘ ",
-          [vim.diagnostic.severity.WARN] = "⚠ ",
-          [vim.diagnostic.severity.HINT] = "󰠠 ",
-          [vim.diagnostic.severity.INFO] = "ℹ ",
-        },
-      },
-      underline = true,
-      update_in_insert = false,
-      severity_sort = false,
-    })
+
 
     local servers = {
       gopls = {
@@ -122,7 +100,6 @@ return {
             },
             schemas = {
               kubernetes = {
-                'k8s-*.{yml,yaml}',
                 'k8s-*.{yml,yaml}',
                 'k8s/*.{yml,yaml}',
               },
