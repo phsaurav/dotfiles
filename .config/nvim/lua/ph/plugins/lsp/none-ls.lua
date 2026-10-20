@@ -5,7 +5,7 @@ return {
     local null_ls = require("null-ls")
     null_ls.setup({
       sources = {
-        null_ls.builtins.formatting.black,
+        -- Conform owns Python formatting; none-ls supplies diagnostics only.
         null_ls.builtins.diagnostics.pylint.with({
           extra_args = { "--disable=W0613" },
         }),

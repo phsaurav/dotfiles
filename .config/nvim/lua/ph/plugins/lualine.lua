@@ -107,9 +107,6 @@ return {
         lualine_b = {},
         lualine_c = {
           "filename",
-          function()
-            return require("auto-session.lib").current_session_name(true)
-          end,
         },
         lualine_x = { "location" },
         lualine_y = {},

@@ -15,12 +15,15 @@ opt.foldenable = false
 opt.foldlevelstart = 99
 opt.foldlevel = 20
 opt.foldmethod = "expr"
-opt.foldexpr = "nvim_treesitter#foldexpr()"
+opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 
-opt.tabstop = 2
-opt.softtabstop = 2
-opt.shiftwidth = 2
+opt.tabstop = 4
+opt.softtabstop = 4
+opt.shiftwidth = 4
 opt.expandtab = true
+-- Keep four-space defaults instead of filetype-specific two-space overrides.
+vim.g.yaml_recommended_style = 0
+vim.g.sass_recommended_style = 0
 opt.autoindent = true
 opt.smartindent = true
 
@@ -59,15 +62,18 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 })
 
 vim.diagnostic.config({
-  signs = true,
-  underline = {
-    severity = {
-      min = vim.diagnostic.severity.ERROR,
+  virtual_text = false,
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = "✘ ",
+      [vim.diagnostic.severity.WARN] = "⚠ ",
+      [vim.diagnostic.severity.HINT] = "󰠠 ",
+      [vim.diagnostic.severity.INFO] = "ℹ ",
     },
   },
-  virtual_text = { current_line = true },
-
-  severity_sort = true,
+  underline = true,
+  update_in_insert = false,
+  severity_sort = false,
 })
 
 -- Auto-reload files changed outside of Neovim

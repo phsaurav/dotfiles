@@ -1,45 +1,51 @@
 return {
   "nvim-treesitter/nvim-treesitter",
-  event = { "BufReadPre", "BufNewFile" },
+  branch = "main",
+  lazy = false,
   build = ":TSUpdate",
   config = function()
     require("nvim-treesitter").setup({
-      modules = {},
-      sync_install = false,
-      auto_install = true,
-      ignore_install = {},
-      indent = {
-        enable = true,
-      },
-      ensure_installed = {
-        "lua",
-        "vim",
-        "vimdoc",
-        "markdown",
-        "markdown_inline",
-        "latex",
-        "html",
-        "json",
-        "yaml",
-        "bash",
-        "go",
-        "javascript",
-        "python",
-        "terraform",
-        "typescript",
-        "tsx",
-        "css",
-        "scss"
-      },
-      incremental_selection = {
-        enable = true,
-        keymaps = {
-          init_selection = "<C-o>",
-          node_incremental = "<C-o>",
-          scope_incremental = false,
-          node_decremental = "<C-i>",
-        },
-      },
+      install_dir = vim.fn.stdpath("data") .. "/site",
+    })
+
+    require("nvim-treesitter").install({
+      "lua",
+      "vim",
+      "vimdoc",
+      "markdown",
+      "markdown_inline",
+      "latex",
+      "html",
+      "json",
+      "yaml",
+      "bash",
+      "go",
+      "gomod",
+      "gowork",
+      "gosum",
+      "javascript",
+      "python",
+      "terraform",
+      "typescript",
+      "tsx",
+      "css",
+      "scss",
+    })
+
+    -- Missing parsers must not interrupt filetype setup. Retry when revisiting a buffer.
+    vim.api.nvim_create_autocmd({ "FileType", "BufWinEnter" }, {
+      group = vim.api.nvim_create_augroup("ph-treesitter", { clear = true }),
+      callback = function(args)
+        if vim.bo[args.buf].buftype ~= "" then return end
+        local ft = vim.bo[args.buf].filetype
+        if ft == "" then return end
+        local lang = vim.treesitter.language.get_lang(ft) or ft
+        local ok, loaded = pcall(vim.treesitter.language.add, lang)
+        if not ok or not loaded then return end
+        if pcall(vim.treesitter.start, args.buf, lang) then
+          vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+        end
+      end,
     })
 
     -- Select markdown fenced code block content (inside only)
@@ -65,11 +71,5 @@ return {
       print("Not inside a code block")
     end, { desc = "Select code block content" })
 
-    vim.api.nvim_create_autocmd('FileType', {
-      pattern = { 'markdown' },
-      callback = function()
-        vim.treesitter.start()
-      end,
-    })
   end,
 }

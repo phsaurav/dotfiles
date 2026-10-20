@@ -4,18 +4,6 @@ return {
   config = function()
     local conform = require("conform")
 
-    vim.opt.tabstop = 2      -- Number of spaces for a tab
-    vim.opt.shiftwidth = 2   -- Indentation size
-    vim.opt.expandtab = true -- Use spaces instead of tabs
-
-    -- Automatically format on save
-    vim.api.nvim_create_autocmd("BufWritePre", {
-      pattern = "*",
-      callback = function(args)
-        conform.format({ bufnr = args.buf })
-      end,
-    })
-
     -- Keymap to manually trigger formatting
     vim.keymap.set({ "n", "v" }, "<leader>;", function()
       conform.format({
@@ -32,6 +20,14 @@ return {
 
     -- Setup conform
     conform.setup({
+      formatters = {
+        prettier = {
+          -- Use the editor width by default; explicit project settings take precedence.
+          prepend_args = function(_, ctx)
+            return { "--tab-width", tostring(vim.bo[ctx.buf].shiftwidth), "--config-precedence", "file-override" }
+          end,
+        },
+      },
       formatters_by_ft = {
         go = { "gofmt" },
         python = { "black", "isort" },

@@ -1,11 +1,7 @@
 return {
   "williamboman/mason.nvim",
   cmd = "Mason",
-  dependencies = {
-    event = { "BufReadPre", "BufNewFile" },
-    "williamboman/mason-lspconfig.nvim",
-  },
-ft = { "lua", "python", "go", "dockerfile", "json", "sh", "yaml", "yml", "html", "css", "templ", "javascript", "javascriptreact", "typescript", "typescriptreact" },
+  dependencies = { "williamboman/mason-lspconfig.nvim" },
 
   config = function()
     local mason = require("mason")
@@ -28,9 +24,9 @@ ft = { "lua", "python", "go", "dockerfile", "json", "sh", "yaml", "yml", "html",
       -- list of servers for mason to install
       ensure_installed = {
         "gopls",
+        "lua_ls",
         "bashls",
         "jsonls",
-        "pyright",
         "yamlls",
         "tailwindcss",
         "html",
@@ -39,8 +35,8 @@ ft = { "lua", "python", "go", "dockerfile", "json", "sh", "yaml", "yml", "html",
         "templ",
         "ts_ls",
       },
-      automatic_installation = true,
-      automatic_enable = true
+      -- lspconfig.lua enables servers after applying their settings.
+      automatic_enable = false
     })
 
     -- mason_tool_installer.setup({
