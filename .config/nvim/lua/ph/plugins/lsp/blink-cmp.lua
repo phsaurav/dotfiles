@@ -1,8 +1,10 @@
+local dictionary_file = vim.fn.expand("~/Documents/Software/words.txt")
+
 return {
   {
     "saghen/blink.cmp",
     event = { "InsertEnter", "CmdlineEnter" },
-    dependencies = { "saghen/blink.compat" }, -- Move blink-cmp-dictionary out of here
+    dependencies = { "saghen/blink.compat" }, -- Obsidian completion adapters
     version = "1.*",
 
     opts = {
@@ -45,17 +47,18 @@ return {
         nerd_font_variant = "mono",
       },
 
+      -- Keep code completion lean; note-related providers belong to Markdown.
       sources = {
-        default = {
-          "lsp",
-          "path",
-          "snippets",
-          "buffer",
-          "obsidian",
-          "obsidian_new",
-          "obsidian_tags",
-          "markdown",
-          "dictionary",
+        default = { "lsp", "path", "snippets", "buffer" },
+        per_filetype = {
+          markdown = {
+            inherit_defaults = true,
+            "obsidian",
+            "obsidian_new",
+            "obsidian_tags",
+            "markdown",
+            "dictionary",
+          },
         },
         providers = {
           obsidian = {
@@ -73,32 +76,21 @@ return {
           markdown = {
             name = "render-markdown",
             module = "render-markdown.integ.blink",
-            enabled = function()
-              if vim.bo.filetype == "markdown" then
-                return true
-              else
-                return false
-              end
-            end,
           },
           dictionary = {
             module = "blink-cmp-dictionary",
             name = "Dict",
             min_keyword_length = 3,
+            -- The dictionary is optional when syncing this config to another machine.
             enabled = function()
-              if vim.bo.filetype == "markdown" then
-                return true  -- Enable dictionary only for markdown files
-              else
-                return false -- Disable for all other filetypes
-              end
+              return vim.fn.filereadable(dictionary_file) == 1
             end,
             opts = {
-              dictionary_files = { vim.fn.expand("/Users/phsaurav/Documents/Software/words.txt") },
+              dictionary_files = { dictionary_file },
               max_items = 5,
             },
           },
         },
-
       },
       fuzzy = { implementation = "prefer_rust_with_warning" },
       signature = {
@@ -112,7 +104,7 @@ return {
   },
   {
     "Kaiser-Yang/blink-cmp-dictionary",
-    ft = "markdown",                       -- Load only for Markdown filetype
-    dependencies = { "saghen/blink.cmp" }, -- Ensure blink.cmp is loaded first
+    ft = "markdown",
+    dependencies = { "saghen/blink.cmp" },
   },
 }

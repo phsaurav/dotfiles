@@ -57,7 +57,9 @@ Available when a language server attaches.
 
 In Insert mode: `Ctrl-Space` opens completion, `Ctrl-j/k` or `Ctrl-n/p` selects, `Ctrl-y` accepts, `Ctrl-e` cancels. `Tab` / `Shift-Tab` moves through snippet fields.
 
-`blink-cmp-dictionary` adds Markdown word suggestions; `blink.compat` connects older completion sources.
+Code completion uses language servers, paths, snippets and buffer words. Markdown also enables Obsidian links/tags, Markdown helpers and dictionary words; a missing dictionary file is skipped. `blink.compat` connects the Obsidian sources.
+
+`:BlinkCmp status` shows which completion sources are enabled.
 
 ## Gitsigns — Git changes beside your code
 
