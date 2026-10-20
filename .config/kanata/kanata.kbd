@@ -1,0 +1,65 @@
+;; Kanata config — caps lock layer + macOS media F-keys
+;;
+;; base layer:
+;;   F1  -> brightness down       F7  -> previous track
+;;   F2  -> brightness up         F8  -> play / pause
+;;   F3  -> mission control       F9  -> next track
+;;   F4  -> launchpad             F10 -> mute
+;;   F5  -> F5  (kept)            F11 -> volume down
+;;   F6  -> F6  (kept)            F12 -> volume up
+;;
+;; caps (hold)      -> nav layer
+;;   h j k l        -> left down up right
+;;   i              -> enter
+;;   o              -> escape
+;;   f              -> ctrl+f
+;;   g              -> ctrl+g
+;;   F1..F12        -> real F1..F12 (override media)
+;;
+;; fn + caps        -> actual caps lock
+
+(defcfg
+  process-unmapped-keys yes
+  macos-dev-names-include (
+    "Apple Internal Keyboard / Trackpad"
+  )
+)
+
+(defsrc
+  fn   caps
+  f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12
+  h    j    k    l    i    o    f    g
+)
+
+(defalias
+  ;; fn keeps doing its normal job AND activates the fnl layer
+  fn   (multi fn (layer-while-held fnl))
+  nav  (layer-while-held nav)
+
+  ;; Mission Control / Launchpad: kanata has no direct consumer code.
+  ;; F3 = ctrl+up (macOS default Mission Control shortcut).
+  ;; F4 = launchpad — no default shortcut; bind one in System Settings → Keyboard
+  ;; → Keyboard Shortcuts → Launchpad & Dock, then change `lpad` below to match.
+  mctl (macro lctl up)
+  lpad f4
+)
+
+(deflayer base
+  @fn  @nav
+  brdn brup @mctl @lpad _    _    prev pp   next mute vold volu
+  _    _    _    _    _    _    _    _
+)
+
+;; Active while caps is held — F-keys become real F-keys, hjkl etc become nav
+(deflayer nav
+  _    XX
+  f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12
+  left down up   rght ret  esc  C-f  C-g
+)
+
+;; Active while fn is held — caps becomes real caps lock
+(deflayer fnl
+  _    caps
+  _    _    _    _    _    _    _    _    _    _    _    _
+  _    _    _    _    _    _    _    _
+)

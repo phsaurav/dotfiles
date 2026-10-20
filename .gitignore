@@ -1,2 +1,23 @@
 \.DS_Store
 
+# Claude Code - only track settings.json and agents/
+.claude/history.jsonl
+.claude/cache/
+.claude/downloads/
+.claude/sessions/
+.claude/session-env/
+.claude/shell-snapshots/
+.claude/telemetry/
+.claude/file-history/
+.claude/paste-cache/
+.claude/plans/
+.claude/plugins/
+.claude/tasks/
+.claude/backups/
+.claude/ide/
+.claude/projects/
+.claude/agent-memory/
+.claude/policy-limits.json
+.claude/mcp-needs-auth-cache.json
+.claude/remote-settings.json
+

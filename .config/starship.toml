@@ -40,6 +40,10 @@ truncate_to_repo = false
 symbol = "☸ "
 format = "[$symbol$context]($style) "
 disabled = false
+# Only render module when working in k8s-related dirs/files (avoids 2-3s kubeconfig probe on every prompt)
+detect_files = ['Chart.yaml', 'k8s.yaml', 'kustomization.yaml', 'skaffold.yaml']
+detect_folders = ['k8s', 'kubernetes', 'manifests']
+detect_extensions = []
 
 [git_branch]
 style = 'fg:green'
