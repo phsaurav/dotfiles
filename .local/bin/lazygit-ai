@@ -1,0 +1,166 @@
+#!/usr/bin/env bash
+# lazygit-ai: AI commit messages + PRs for lazygit via the Claude Code CLI (subscription auth, no API key).
+#
+#   lazygit-ai commit-options      N one-line commit subjects for staged changes (one per line)
+#   lazygit-ai commit-full         full commit message (subject + body) for staged changes
+#   lazygit-ai bases               candidate PR target branches (default first, then staging/develop/dev, rest)
+#   lazygit-ai pr [base]           draft PR title/body, review in $EDITOR, push, gh pr create
+#
+# Env: LGAI_MODEL (default haiku), LGAI_PR_MODEL (default sonnet), LGAI_OPTIONS (default 5),
+#      LGAI_MAX_DIFF (chars of diff sent, default 60000), LGAI_TIMEOUT (seconds, default 90),
+#      LGAI_ALLOW_SECRETS=1 (skip the secrets guard for one run)
+#
+# Safety: only plain `git commit`, `git fetch`, `git push` (never --force/--amend/--no-verify) and
+# `gh pr create` after an explicit confirm. Claude runs with no tools, no hooks/MCP, no saved session.
+set -euo pipefail
+
+MODEL="${LGAI_MODEL:-haiku}"
+PR_MODEL="${LGAI_PR_MODEL:-sonnet}"
+OPTIONS="${LGAI_OPTIONS:-5}"
+MAX_DIFF="${LGAI_MAX_DIFF:-60000}"
+TIMEOUT="${LGAI_TIMEOUT:-90}"
+
+die() { echo "lazygit-ai: $*" >&2; exit 1; }
+
+# Plain one-shot call: no tools, no hooks/plugins/MCP, no saved session. perl alarm = timeout (macOS has no `timeout`).
+ask() {
+  local model="$1" system="$2" rc=0
+  perl -e 'alarm shift; exec @ARGV' "$TIMEOUT" \
+    claude -p --model "$model" --tools "" --no-session-persistence \
+      --setting-sources "" --strict-mcp-config --system-prompt "$system" \
+      "Generate it from the input on stdin." || rc=$?
+  [ "$rc" -eq 142 ] && die "Claude did not answer within ${TIMEOUT}s (LGAI_TIMEOUT)."
+  return "$rc"
+}
+
+# Refuse to send diffs that look like they contain secrets. Args: git diff args (e.g. --cached, or a range).
+secrets_guard() {
+  [ "${LGAI_ALLOW_SECRETS:-0}" = "1" ] && return 0
+  local files hits=""
+  files="$(git diff --name-only "$@")"
+  hits+="$(grep -viE '\.(example|sample|template|dist)$' <<<"$files" | grep -iE '(^|/)(\.env([.-].*)?|.*\.(pem|key|p12|pfx|jks|keystore)|id_(rsa|dsa|ecdsa|ed25519)|.*(secret|credential|password|token)[^/]*|.*\.tfvars|ovh\.conf|\.npmrc|\.pypirc|\.netrc|kubeconfig.*)$' | sed 's/^/  file: /' || true)"
+  hits+="$(git diff --no-color --no-ext-diff "$@" \
+    | grep -E '^\+' | grep -vE '^\+\+\+ ' \
+    | grep -nE 'AKIA[0-9A-Z]{16}|ASIA[0-9A-Z]{16}|-----BEGIN [A-Z ]*PRIVATE KEY|gh[pousr]_[A-Za-z0-9]{30,}|sk-(ant-|live_|proj-)?[A-Za-z0-9_-]{20,}|xox[baprs]-[A-Za-z0-9-]{10,}|AIza[0-9A-Za-z_-]{35}|eyJ[A-Za-z0-9_-]{20,}\.eyJ[A-Za-z0-9_-]{20,}\.|(api[_-]?key|secret|password|passwd|token)["'"'"'[:space:]]*[:=][[:space:]]*["'"'"'][^"'"'"']{8,}' \
+    | cut -c1-120 | sed 's/^/  line: /' || true)"
+  hits="$(printf '%s' "$hits" | grep -v '^$' || true)"
+  [ -z "$hits" ] && return 0
+  {
+    echo "lazygit-ai: possible secrets in the diff, refusing to send it to Claude:"
+    echo "$hits" | head -20
+    echo "Unstage them, or re-run with LGAI_ALLOW_SECRETS=1 if these are false positives."
+  } >&2
+  exit 1
+}
+
+# Context for Claude: header, stat (always complete), diff truncated to MAX_DIFF with a marker.
+# Collected into variables so a truncated pipe never SIGPIPEs git (exit 141 made lazygit show an error).
+build_context() {
+  local header="$1"; shift
+  local stat diff
+  stat="$(git diff --stat "$@")"
+  diff="$(git diff --no-color --no-ext-diff "$@")"
+  printf '%s\n\nFiles:\n%s\n\n' "$header" "$stat"
+  if [ "${#diff}" -gt "$MAX_DIFF" ]; then
+    printf '%s\n\n[diff truncated: %d of %d chars shown; the file list above is complete]\n' "${diff:0:MAX_DIFF}" "$MAX_DIFF" "${#diff}"
+  else
+    printf '%s\n' "$diff"
+  fi
+}
+
+staged_context() {
+  git diff --cached --quiet && die "No staged changes. Stage files first (space / a)."
+  secrets_guard --cached
+  build_context "$(printf 'Branch: %s\nRecent commits (style reference):\n%s' "$(git branch --show-current)" "$(git log --oneline -8 2>/dev/null || true)")" --cached
+}
+
+default_branch() {
+  local b
+  b="$(git symbolic-ref -q --short refs/remotes/origin/HEAD 2>/dev/null || true)"
+  b="${b#origin/}"
+  [ -z "$b" ] && b="$(gh repo view --json defaultBranchRef -q .defaultBranchRef.name 2>/dev/null || true)"
+  echo "${b:-main}"
+}
+
+case "${1:-}" in
+  bases)
+    cur="$(git branch --show-current)"
+    def="$(default_branch)"
+    all="$(git for-each-ref --format='%(refname:short)' refs/remotes/origin | sed 's#^origin/##' | grep -vxE 'HEAD|origin' || true)"
+    [ -z "$all" ] && all="$(git for-each-ref --format='%(refname:short)' refs/heads)"
+    {
+      echo "$def"
+      for b in staging stage develop dev; do grep -qx "$b" <<<"$all" && echo "$b"; done
+      echo "$all"
+    } | awk 'NF && !seen[$0]++' | grep -vx "$cur" || true
+    ;;
+  commit-options)
+    ctx="$(staged_context)"
+    out="$(ask "$MODEL" "You write git commit subject lines. Output exactly $OPTIONS different candidates, one per line, nothing else: no numbering, bullets, quotes, code fences or blank lines. Conventional Commits format (type(scope): summary), imperative mood, max 72 chars. Vary type/scope/wording. Follow the repo's recent commit style if it differs." <<<"$ctx")"
+    # Strip list markers ("- ", "* ", "1. ", "2) ") and stray backticks; keep subjects that start with a digit ("2fa: ...").
+    printf '%s\n' "$out" | sed -E -e 's/^[[:space:]]*([-*]|[0-9]{1,2}[.)])[[:space:]]+//' -e 's/^`+//' -e 's/`+$//' \
+      | grep -v '^[[:space:]]*$' | head -n "$OPTIONS"
+    ;;
+  commit-full)
+    ctx="$(staged_context)"
+    ask "$MODEL" "You write short, scannable git commit messages. Output only the message, no code fences or commentary.
+Line 1: Conventional Commits subject (type(scope): summary), imperative, max 60 chars. This line alone must tell the story.
+Body: OMIT it entirely for small or self-explanatory changes. Otherwise a blank line then at most 4 bullets ('- '), each one line, max 72 chars, telling only what a reader cannot see from the subject (a non-obvious why, a behavior change, a migration or config step). No paragraphs, no restating the diff, no filler." <<<"$ctx"
+    ;;
+  pr)
+    base="${2:-$(default_branch)}"
+    branch="$(git branch --show-current)"
+    [ -z "$branch" ] && die "Detached HEAD; checkout a branch first."
+    [ "$branch" = "$base" ] && die "On base branch '$base'; checkout a feature branch first."
+    git fetch -q origin "$base" 2>/dev/null || true
+    range="origin/$base...HEAD"; git rev-parse -q --verify "origin/$base" >/dev/null || range="$base...HEAD"
+    [ -z "$(git log --oneline "$range")" ] && die "No commits between $base and $branch."
+    secrets_guard "$range"
+
+    dir="$(mktemp -d -t lazygit-ai)"   # 0700, private to this user
+    file="$dir/PR.md"
+    echo "Asking Claude ($PR_MODEL) for PR title/body against $base..."
+    ctx="$(build_context "$(printf 'Branch: %s -> %s\n\nCommits:\n%s' "$branch" "$base" "$(git log --no-merges --format='- %s%n%b' "$range")")" "$range")"
+    ask "$PR_MODEL" "You write short, visual GitHub pull request descriptions that a reviewer can scan in 30 seconds. Output only the text below, no code fences around it, no commentary.
+Line 1: PR title (Conventional Commits style, max 60 chars). Line 2: blank.
+Then this Markdown body, in order:
+**TL;DR:** one sentence, max 25 words, what this PR does and why.
+## Changes
+Group by area as '### <area>' subsections ONLY if there are 2+ distinct areas; otherwise plain bullets. Each bullet: one line, max 15 words, starting with a verb. Mention a file path only when a reviewer must open it. Max 8 bullets total.
+## Notes
+Only if needed: breaking changes, migrations, config/env changes, follow-ups. Bullets, one line each. Omit this section if nothing applies.
+## Testing
+Max 3 bullets on how to verify; write '- Not tested' if unknown.
+Rules: no paragraphs anywhere, no restating the diff, no filler phrases, prefer tables only when comparing before/after values." <<<"$ctx" >"$file"
+
+    # shellcheck disable=SC2086  # allow EDITOR="code --wait"
+    ${EDITOR:-vi} "$file"
+    title="$(head -n1 "$file")"
+    [ -z "$title" ] && { rm -rf "$dir"; die "Empty title, aborting."; }
+
+    printf '\nTitle: %s\nCreate PR %s -> %s? [d]raft / [r]eady / [w]eb / [n]o: ' "$title" "$branch" "$base"
+    read -r ans
+    case "$ans" in d|D|"") flag=(--draft) ;; r|R) flag=() ;; w|W) flag=(--web) ;; *) echo "Aborted. Draft kept at $file"; exit 0 ;; esac
+
+    # Plain push, never --force. A rejected push stops here instead of creating a PR from stale remote state.
+    if git rev-parse -q --verify "@{u}" >/dev/null 2>&1; then
+      git push || die "Push rejected; fix the branch state in lazygit, then retry. Draft kept at $file"
+    else
+      git push -u origin HEAD || die "Push failed. Draft kept at $file"
+    fi
+    tail -n +3 "$file" >"$dir/body.md"
+    gh pr create --base "$base" --title "$title" --body-file "$dir/body.md" "${flag[@]}"
+    rm -rf "$dir"
+    # Copy the PR URL so it can be shared right away (--web opens the browser form; no URL exists yet).
+    if url="$(gh pr view --json url -q .url 2>/dev/null)" && [ -n "$url" ]; then
+      if command -v pbcopy >/dev/null; then printf '%s' "$url" | pbcopy && echo "PR URL copied to clipboard: $url"
+      elif command -v wl-copy >/dev/null; then printf '%s' "$url" | wl-copy && echo "PR URL copied to clipboard: $url"
+      elif command -v xclip >/dev/null; then printf '%s' "$url" | xclip -selection clipboard && echo "PR URL copied to clipboard: $url"
+      else echo "PR: $url"; fi
+    fi
+    ;;
+  *)
+    sed -n '2,11p' "$0" | sed 's/^# \{0,1\}//'
+    exit 1
+    ;;
+esac

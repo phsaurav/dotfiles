@@ -8,3 +8,4 @@ settings.json
 Raycast.*\.rayconfig
 \.nvim\.dotfiles\.shada
 \.stow-local-ignore
+docs

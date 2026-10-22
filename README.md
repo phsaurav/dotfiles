@@ -28,3 +28,10 @@ You can also run individual scripts for specific components:
 - `./install_dotfiles.sh`: Clones the repository and stows dotfiles (removes old nvim configs)
 - `./install_overrides.sh`: Sets up Hyprland overrides by appending a source line to ~/.config/hypr/hyprland.conf
 - `./set_shell.sh`: Sets Zsh as the default shell for the current user
+
+## Lazygit + Claude Code (AI commits and PRs)
+`ctrl+a` inside lazygit: AI commit messages (`c` pick / `f` full) and AI pull requests (`p`, target-branch picker, pushes, `gh pr create`, copies URL). Uses the Claude Code CLI on the subscription, no API key. Full guide: [docs/lazygit-ai.md](docs/lazygit-ai.md).
+```bash
+./scripts/lazygit_install.sh   # installs lazygit, gh, jq, claude; stows config + lazygit-ai; fixes macOS config path
+```
+Files: `.config/lazygit/config.yml`, `.local/bin/lazygit-ai`, `scripts/lazygit_install.sh`.

@@ -1,0 +1,46 @@
+git:
+  disableForcePushing: true
+
+gui:
+  filterMode: fuzzy   # "/" in any list or menu (branches, PR target picker, AI messages) = fzf-style match
+
+# AI via Claude Code CLI (subscription auth). Helper: ~/.local/bin/lazygit-ai
+customCommands:
+  # ctrl+a anywhere -> AI menu (c = pick subject, f = full message, p = PR)
+  - key: "<c-a>"
+    description: "AI (Claude)"
+    commandMenu:
+      - key: "c"
+        description: "Pick from AI subject lines"
+        loadingText: "Claude is reading the staged diff..."
+        prompts:
+          - type: "menuFromCommand"
+            title: "AI commit messages"
+            key: "Msg"
+            command: "lazygit-ai commit-options"
+          - type: "menu"
+            title: "Action"
+            key: "Action"
+            options:
+              - name: "Commit"
+                description: "Use as-is"
+                value: "direct"
+              - name: "Edit first"
+                description: "Open in editor, add body if needed"
+                value: "edit"
+        command: >-
+          {{if eq .Form.Action "edit"}}git commit -e -m {{.Form.Msg | quote}}{{else}}git commit -m {{.Form.Msg | quote}}{{end}}
+        output: terminal
+      - key: "f"
+        description: "Full AI message (subject + body) in editor"
+        command: 'msg="$(lazygit-ai commit-full)" && git commit -e -m "$msg"'
+        output: terminal
+      - key: "p"
+        description: "AI pull request for checked-out branch (gh)"
+        prompts:
+          - type: "menuFromCommand"
+            title: "PR target branch"
+            key: "Base"
+            command: "lazygit-ai bases"
+        command: "lazygit-ai pr {{.Form.Base | quote}}"
+        output: terminal
