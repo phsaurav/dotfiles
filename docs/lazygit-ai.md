@@ -38,8 +38,14 @@ Press `ctrl+a` in any lazygit panel. A menu opens:
 
 | Key | Action | AI? | Side effects |
 |---|---|---|---|
-| `c` | **Pick from AI subject lines**: 5 one-line Conventional Commit subjects for the staged diff. Choose one, then *Commit* as-is or *Edit first* (opens `$EDITOR`). | Haiku | `git commit` |
-| `f` | **Full AI message**: subject + short bullet body, opened in `$EDITOR`. `:wq` commits, `:q!` aborts. | Haiku | `git commit` |
+| `c` | **Pick from AI subject lines**: 5 one-line Conventional Commit subjects for the staged diff. Choose one, then *Commit* as-is or *Edit first* (opens your git editor). | Haiku | `git commit` |
+| `f` | **Full AI message**: subject + short bullet body, opened in your git editor. | Haiku | `git commit` |
+
+Editor rule for `c` → *Edit first* and `f`: **save = commit, quit without saving (`:q!`) = abort.**
+(`git commit -e` cannot do this: it writes the message before the editor opens, so `:q!` still
+commits. `lazygit-ai commit-edit` opens the file itself and commits only if the mtime changed.)
+Lines starting with `#` in the editor are stripped. The editor is whatever `git var GIT_EDITOR`
+resolves to: `GIT_EDITOR` > `core.editor` > `VISUAL` > `EDITOR` > `vi`.
 | `p` | **AI pull request**: pick the target branch, Claude drafts title + body, you review in `$EDITOR`, choose draft / ready / web, it pushes and runs `gh pr create`, then copies the PR URL to the clipboard. | Sonnet | `git push`, `gh pr create` |
 
 In every list and menu, `/` starts a **fuzzy** filter (`gui.filterMode: fuzzy`), so `/rls` finds
@@ -56,7 +62,7 @@ own (cached in `github_pull_requests.json` next to the config; not something you
 ```
 lazygit (config.yml, customCommands)
    │  ctrl+a → menu
-   ├─ c / f ──► lazygit-ai commit-options | commit-full ──► claude -p (haiku)  ──► git commit
+   ├─ c / f ──► lazygit-ai commit-options | commit-edit ──► claude -p (haiku) ──► [editor, commit only if saved] ──► git commit
    └─ p ──────► lazygit-ai bases  (target picker)
                 lazygit-ai pr <base> ──► claude -p (sonnet) ──► $EDITOR ──► git push ──► gh pr create ──► pbcopy
 ```
@@ -79,6 +85,7 @@ latency: 5 to 8 s for a commit message, 10 to 20 s for a PR description.
 ```
 lazygit-ai commit-options       N one-line commit subjects for staged changes (one per line)
 lazygit-ai commit-full          full commit message (subject + body) for staged changes
+lazygit-ai commit-edit [msg]    open msg (or a fresh commit-full) in the git editor; commit ONLY if saved
 lazygit-ai bases                candidate PR target branches (default first, then staging/develop/dev, rest)
 lazygit-ai pr [base]            draft PR title/body, review in $EDITOR, push, gh pr create, copy URL
 ```
@@ -137,15 +144,21 @@ Before any diff is sent to Claude, `lazygit-ai` refuses and lists the hits if it
   `*.keystore`, `id_rsa`/`id_ed25519`/…, anything containing `secret`, `credential`, `password`,
   `token`, `*.tfvars`, `ovh.conf`, `.npmrc`, `.pypirc`, `.netrc`, `kubeconfig*`.
   Files ending in `.example`, `.sample`, `.template`, `.dist` are allowed.
-- **Added lines**: AWS `AKIA…`/`ASIA…` keys, `-----BEGIN … PRIVATE KEY`, GitHub `ghp_…`/`gho_…`,
-  `sk-…` API keys, Slack `xox…`, Google `AIza…`, JWTs, and `password = "…"` style assignments.
+- **Added lines, high confidence** (every file): AWS `AKIA…`/`ASIA…` keys, `-----BEGIN … PRIVATE KEY`,
+  GitHub `ghp_…`/`gho_…`, `sk-…` API keys, Slack `xox…`, Google `AIza…`, full three-part JWTs.
+- **Added lines, generic** (code and config only, skipped in `.md`/`.mdx`/`.rst`/`.txt` where sample
+  JSON is common): `password = "…"`, `token: "…"`, `api_key=…` style assignments with 8+ char values.
+- Values that look like placeholders are ignored everywhere: `example`, `...`, `xxx`, `placeholder`,
+  `your-`, `<…>`, `changeme`, `dummy`, `redacted`, `***`.
 
 ```
 lazygit-ai: possible secrets in the diff, refusing to send it to Claude:
   file: .env
-  line: 12:+AWS_KEY = "AKIA..."
+  src/aws.py:42:AWS_KEY = "AKIA..."
 Unstage them, or re-run with LGAI_ALLOW_SECRETS=1 if these are false positives.
 ```
+
+Hits show `path:line` with the real line number in the file.
 
 ---
 

@@ -3,6 +3,7 @@
 #
 #   lazygit-ai commit-options      N one-line commit subjects for staged changes (one per line)
 #   lazygit-ai commit-full         full commit message (subject + body) for staged changes
+#   lazygit-ai commit-edit [msg]   open msg (or a fresh commit-full) in $EDITOR; commit ONLY if the file was saved
 #   lazygit-ai bases               candidate PR target branches (default first, then staging/develop/dev, rest)
 #   lazygit-ai pr [base]           draft PR title/body, review in $EDITOR, push, gh pr create
 #
@@ -39,11 +40,21 @@ secrets_guard() {
   local files hits=""
   files="$(git diff --name-only "$@")"
   hits+="$(grep -viE '\.(example|sample|template|dist)$' <<<"$files" | grep -iE '(^|/)(\.env([.-].*)?|.*\.(pem|key|p12|pfx|jks|keystore)|id_(rsa|dsa|ecdsa|ed25519)|.*(secret|credential|password|token)[^/]*|.*\.tfvars|ovh\.conf|\.npmrc|\.pypirc|\.netrc|kubeconfig.*)$' | sed 's/^/  file: /' || true)"
-  hits+="$(git diff --no-color --no-ext-diff "$@" \
-    | grep -E '^\+' | grep -vE '^\+\+\+ ' \
-    | grep -nE 'AKIA[0-9A-Z]{16}|ASIA[0-9A-Z]{16}|-----BEGIN [A-Z ]*PRIVATE KEY|gh[pousr]_[A-Za-z0-9]{30,}|sk-(ant-|live_|proj-)?[A-Za-z0-9_-]{20,}|xox[baprs]-[A-Za-z0-9-]{10,}|AIza[0-9A-Za-z_-]{35}|eyJ[A-Za-z0-9_-]{20,}\.eyJ[A-Za-z0-9_-]{20,}\.|(api[_-]?key|secret|password|passwd|token)["'"'"'[:space:]]*[:=][[:space:]]*["'"'"'][^"'"'"']{8,}' \
-    | cut -c1-120 | sed 's/^/  line: /' || true)"
-  hits="$(printf '%s' "$hits" | grep -v '^$' || true)"
+  # Content scan, per file so hits show "path:line". HIGH = token formats (always). GENERIC = `password: "..."`
+  # style assignments, skipped in docs (.md/.rst/.txt) where sample JSON is common. Placeholder values are ignored.
+  local high='AKIA[0-9A-Z]{16}|ASIA[0-9A-Z]{16}|-----BEGIN [A-Z ]*PRIVATE KEY|gh[pousr]_[A-Za-z0-9]{30,}|sk-(ant-|live_|proj-)?[A-Za-z0-9_-]{20,}|xox[baprs]-[A-Za-z0-9-]{10,}|AIza[0-9A-Za-z_-]{35}|eyJ[A-Za-z0-9_-]{20,}\.eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{10,}'
+  local generic='(api[_-]?key|secret|password|passwd|token)["'"'"'[:space:]]*[:=][[:space:]]*["'"'"'][^"'"'"']{8,}'
+  local placeholder='example|\.\.\.|xxx|placeholder|your[-_]|<[^>]+>|changeme|change-me|dummy|redacted|\*\*\*'
+  local f re
+  while IFS= read -r f; do
+    [ -n "$f" ] || continue
+    re="$high"; [[ "$f" =~ \.(md|mdx|rst|txt)$ ]] || re="$high|$generic"
+    hits+="$(git diff -U0 --no-color --no-ext-diff "$@" -- "$f" \
+      | awk '/^@@/ { split($3, a, /[,+]/); n = a[2]; next } /^\+\+\+ / { next } /^\+/ { print n ":" substr($0, 2); n++ }' \
+      | grep -E "$re" | grep -viE "$placeholder" | cut -c1-120 | sed "s|^|  $f:|" || true)
+"
+  done <<<"$files"
+  hits="$(printf '%s' "$hits" | grep -v '^[[:space:]]*$' || true)"
   [ -z "$hits" ] && return 0
   {
     echo "lazygit-ai: possible secrets in the diff, refusing to send it to Claude:"
@@ -100,6 +111,28 @@ case "${1:-}" in
     # Strip list markers ("- ", "* ", "1. ", "2) ") and stray backticks; keep subjects that start with a digit ("2fa: ...").
     printf '%s\n' "$out" | sed -E -e 's/^[[:space:]]*([-*]|[0-9]{1,2}[.)])[[:space:]]+//' -e 's/^`+//' -e 's/`+$//' \
       | grep -v '^[[:space:]]*$' | head -n "$OPTIONS"
+    ;;
+  commit-edit)
+    # Unlike `git commit -e -m`, quitting the editor without saving (:q!) aborts instead of committing the prefilled text.
+    msg="${2:-}"
+    [ -z "$msg" ] && msg="$("$0" commit-full)"
+    dir="$(mktemp -d -t lazygit-ai)"; file="$dir/COMMIT_EDITMSG"   # this filename gives editors the gitcommit filetype
+    {
+      printf '%s\n\n' "$msg"
+      echo "# AI draft. Save (:w / :wq) to commit, quit without saving (:q!) to abort."
+      echo "# Lines starting with '#' are ignored."
+      echo "#"; git status --short --untracked-files=no 2>/dev/null | sed 's/^/# /'
+    } >"$file"
+    touch -t 200001010000 "$file"   # back-date so any save (even unchanged) moves the mtime
+    mtime() { stat -f %m "$1" 2>/dev/null || stat -c %Y "$1"; }
+    before="$(mtime "$file")"
+    editor="$(git var GIT_EDITOR)"   # same resolution git uses: GIT_EDITOR > core.editor > VISUAL > EDITOR > vi
+    sh -c "$editor \"\$@\"" sh "$file"   # run it the way git does, so 'code --wait' and quoted commands both work
+    if [ "$(mtime "$file")" = "$before" ]; then
+      rm -rf "$dir"; echo "Not saved, commit aborted."; exit 0
+    fi
+    git commit --cleanup=strip -F "$file" || { echo "Commit failed. Message kept at $file" >&2; exit 1; }
+    rm -rf "$dir"
     ;;
   commit-full)
     ctx="$(staged_context)"
